@@ -125,7 +125,7 @@ class Leveling(commands.Cog):
             await ctx.send(embed=embed)
             # await ctx.send(f"Your xp {member.name}: **{xp}/{int((80*(1/2)*lvl))}**\nLevel: **{lvl}** | Rank: #{rank}\nProgress: **{percent}%**\n{progress_bar}")
 
-    @commands.command(aliases=['lb'])
+    @commands.command(aliases=['lb', 'top', 'Top', 'TOP', 'ToP', 'tOP','TOp','LB','lB','Lb'])
     async def leaderboard(self, ctx, page: int = None):
         if page is None or page == 1:
             ranking = leveling.find().sort('xp', -1)
@@ -179,6 +179,75 @@ class Leveling(commands.Cog):
 
                 i += 1
                 if i == 21:
+                    break
+            if embed.description == "":
+                embed.description += "No Data to show"
+            await ctx.send(embed=embed)
+            
+        if page == 3:
+            ranking = leveling.find().sort('xp', -1).skip(20)
+            i = 21
+            embed = discord.Embed(title=f"{ctx.guild.name}'s Leaderboard [{page}]", description="", color=0xff0000,
+                                  timestamp=datetime.datetime.utcnow())
+            embed.set_thumbnail(url=ctx.guild.icon_url)
+            for x in ranking:
+                tempmember = ctx.guild.get_member(x['_id'])
+                xp = x['xp']
+                lvl = 0
+                while True:
+                    if xp < ((20 * (lvl ** 2)) + (20 * lvl)):
+                        break
+                    lvl += 1
+                embed.description += f"\n**{i})** {tempmember.mention} ~-~ Level: **{lvl}**\n"
+
+                i += 1
+                if i == 31:
+                    break
+            if embed.description == "":
+                embed.description += "No Data to show"
+            await ctx.send(embed=embed)
+            
+        if page == 4:
+            ranking = leveling.find().sort('xp', -1).skip(30)
+            i = 31
+            embed = discord.Embed(title=f"{ctx.guild.name}'s Leaderboard [{page}]", description="", color=0xff0000,
+                                  timestamp=datetime.datetime.utcnow())
+            embed.set_thumbnail(url=ctx.guild.icon_url)
+            for x in ranking:
+                tempmember = ctx.guild.get_member(x['_id'])
+                xp = x['xp']
+                lvl = 0
+                while True:
+                    if xp < ((20 * (lvl ** 2)) + (20 * lvl)):
+                        break
+                    lvl += 1
+                embed.description += f"\n**{i})** {tempmember.mention} ~-~ Level: **{lvl}**\n"
+
+                i += 1
+                if i == 41:
+                    break
+            if embed.description == "":
+                embed.description += "No Data to show"
+            await ctx.send(embed=embed)
+        
+        if page == 5:
+            ranking = leveling.find().sort('xp', -1).skip(40)
+            i = 41
+            embed = discord.Embed(title=f"{ctx.guild.name}'s Leaderboard [{page}]", description="", color=0xff0000,
+                                  timestamp=datetime.datetime.utcnow())
+            embed.set_thumbnail(url=ctx.guild.icon_url)
+            for x in ranking:
+                tempmember = ctx.guild.get_member(x['_id'])
+                xp = x['xp']
+                lvl = 0
+                while True:
+                    if xp < ((20 * (lvl ** 2)) + (20 * lvl)):
+                        break
+                    lvl += 1
+                embed.description += f"\n**{i})** {tempmember.mention} ~-~ Level: **{lvl}**\n"
+
+                i += 1
+                if i == 51:
                     break
             if embed.description == "":
                 embed.description += "No Data to show"
