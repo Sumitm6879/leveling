@@ -10,7 +10,7 @@ from pymongo import MongoClient
 import mleveling
 
 intents = discord.Intents().all()
-bot = commands.Bot(command_prefix=';',
+bot = commands.Bot(command_prefix=';;',
                    intents=intents)
 bot.remove_command('help')
 
