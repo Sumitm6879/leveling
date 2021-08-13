@@ -32,8 +32,6 @@ for i in range(len(cogs)):
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(status=discord.Status.online,
-                              activity=discord.Activity(type=discord.ActivityType.listening, name='>> Mystic help <<'))
     print("Logged in as: " + bot.user.name + "\n")
     chan = bot.get_channel(721361976957206568)
     await chan.send("Leveling Bot ONline")
