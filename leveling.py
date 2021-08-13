@@ -35,6 +35,21 @@ async def on_ready():
     chan = bot.get_channel(721361976957206568)
     await chan.send("Leveling Bot ONline")
 
+    
+@bot.command()
+async def ping(ctx):
+    numbers = {0: '𝟘', 1: '𝟙', 2: '𝟚', 3: '𝟛', 4: '𝟜', 5: '𝟝', 6: '𝟞', 7: '𝟟', 8: '𝟠', 9: '𝟡'}
+    ping = round(bot.latency * 1000)
+    x = [int(a) for a in str(ping)]
+    new_ping = ""
+    for i in x:
+        new_ping += "".join(numbers[i])
+
+    embed = discord.Embed(title="Mystic Levels's Latency", description=f'**{new_ping} 𝕞𝕤**', color=0xff0000)
+    embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+    embed.set_footer(text=f"{bot.command_prefix}help to get more info.", icon_url=bot.user.avatar_url)
+    await ctx.send(embed=embed)
+    
 
 @bot.command(aliases=['h', 'H', 'HELP', 'Help', 'HElp'])
 async def help(ctx, arg: str = None):
