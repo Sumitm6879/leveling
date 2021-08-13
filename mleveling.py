@@ -417,6 +417,7 @@ async def verify_level_up(ctx, xp, stats):
         lvl += 1
     xp -= ((20 * ((lvl - 1) ** 2)) + (20 * (lvl - 1)))
     if xp == 0:
+        xp = stats['xp'] + 1
         chan = ctx.author.guild.get_channel(874705596597813288)
         embed = discord.Embed(
             title=f"{ctx.author.mention} Leveled up!",
@@ -434,7 +435,6 @@ async def verify_level_up(ctx, xp, stats):
                 embed.description += f"\nNew Role: **{level_role[i]}**"
         await chan.send(embed=embed)
     elif xp == 1:
-        xp -= 1
         xp = stats['xp'] + 1
         leveling.update_one({"_id": message.author.id}, {"$set": {"xp": xp}})
         chan = ctx.author.guild.get_channel(874705596597813288)
