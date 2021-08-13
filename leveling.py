@@ -9,6 +9,13 @@ from discord.ext.commands import CommandNotFound, MemberNotFound, MissingPermiss
 from pymongo import MongoClient
 import mleveling
 
+
+
+intents = discord.Intents().all()
+bot = commands.Bot(command_prefix=get_prefix(),
+                   intents=intents)
+bot.remove_command('help')
+
 P = 'sumitm6879sm'
 cluster = MongoClient(
     f"mongodb+srv://{P}:sm6879sm@sambot.ipbu6.mongodb.net/SamBot?retryWrites=true&w=majority"
@@ -26,10 +33,6 @@ def get_prefix():
         return prefix
 
 
-intents = discord.Intents().all()
-bot = commands.Bot(command_prefix=get_prefix(),
-                   intents=intents)
-bot.remove_command('help')
 cogs = [mleveling]
 
 for i in range(len(cogs)):
