@@ -10,6 +10,14 @@ from pymongo import MongoClient
 import mleveling
 
 
+async def get_prefix():
+    stats = bot_prefix.find_one({"_id": bot.user.id})
+    if stats is None:
+        prefix = ';;'
+    else:
+        prefix = stats['prefix']
+        
+    return prefix
 
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix=get_prefix(),
@@ -24,13 +32,7 @@ bot_prefix = cluster['MysticBot']['bot_prefix']
 print("DB CONNECTED")
 
 
-def get_prefix():
-    stats = bot_prefix.find_one({"_id": bot.user.id})
-    if stats is None:
-        prefix = ';;'
-    else:
-        prefix = stats['prefix']
-        return prefix
+
 
 
 cogs = [mleveling]
@@ -50,6 +52,7 @@ async def on_ready():
 
 
 @bot.command()
+@commands.has_permissions(administrator=True)
 async def set_prefix(ctx, *, prefix: str):
     stats = bot_prefix.find_one({"_id": bot.user.id})
     old_prefix = stats['prefix']
