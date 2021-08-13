@@ -403,8 +403,12 @@ async def level_up(message, lvl):
         if lvl == levelnum[i]:
             await message.author.add_roles(discord.utils.get(message.author.guild.roles, name=level_role[i]))
             await message.author.remove_roles(discord.utils.get(message.author.guild.roles, name=level_role[i - 1]))
-            await message.channel.send(
-                f"Congratulations {message.author.mention} You have unlocked the new role **{level_role[i]}**")
+            await ctx.channel.send(embed=discord.Embed(
+                    title="New Role Unlocked!",
+                    description=f"Congratulations {ctx.author.mention} You have unlocked the new role **{level_role[i]}**",
+                    color=0x00ff00,
+                    timestamp=datetime.datetime.utcnow())
+                )
             embed.description += f"\nNew Role: **{level_role[i]}**"
     await chan.send(embed=embed)
 
@@ -430,8 +434,12 @@ async def verify_level_up(ctx, xp, stats):
             if lvl == levelnum[i]:
                 await ctx.author.add_roles(discord.utils.get(ctx.author.guild.roles, name=level_role[i]))
                 await ctx.author.remove_roles(discord.utils.get(ctx.author.guild.roles, name=level_role[i - 1]))
-                await ctx.channel.send(
-                    f"Congratulations {ctx.author.mention} You have unlocked the new role **{level_role[i]}**")
+                await ctx.channel.send(embed=discord.Embed(
+                    title="New Role Unlocked!",
+                    description=f"Congratulations {ctx.author.mention} You have unlocked the new role **{level_role[i]}**",
+                    color=0x00ff00,
+                    timestamp=datetime.datetime.utcnow())
+                )
                 embed.description += f"\nNew Role: **{level_role[i]}**"
         await chan.send(embed=embed)
     elif xp == 1:
@@ -449,7 +457,11 @@ async def verify_level_up(ctx, xp, stats):
             if lvl == levelnum[i]:
                 await ctx.author.add_roles(discord.utils.get(ctx.author.guild.roles, name=level_role[i]))
                 await ctx.author.remove_roles(discord.utils.get(ctx.author.guild.roles, name=level_role[i - 1]))
-                await ctx.channel.send(
-                    f"Congratulations {ctx.author.mention} You have unlocked the new role **{level_role[i]}**")
+                await ctx.channel.send(embed=discord.Embed(
+                    title="New Role Unlocked!",
+                    description=f"Congratulations {ctx.author.mention} You have unlocked the new role **{level_role[i]}**",
+                    color=0x00ff00,
+                    timestamp=datetime.datetime.utcnow())
+                )
                 embed.description += f"\nNew Role: **{level_role[i]}**"
         await chan.send(embed=embed)
