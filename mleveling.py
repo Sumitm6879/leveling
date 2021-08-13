@@ -64,6 +64,8 @@ class Leveling(commands.Cog):
                         lvl += 1
                     xp -= ((20 * ((lvl - 1) ** 2)) + (20 * (lvl - 1)))
                     if xp == 0:
+                        xp = stats['xp'] + 1
+                        leveling.update_one({"_id": message.author.id}, {"$set": {"xp": xp}})
                         await asyncio.create_task(level_up(message, lvl))
                     elif xp == 1:
                         xp -= 1
@@ -403,7 +405,7 @@ async def level_up(message, lvl):
         if lvl == levelnum[i]:
             await message.author.add_roles(discord.utils.get(message.author.guild.roles, name=level_role[i]))
             await message.author.remove_roles(discord.utils.get(message.author.guild.roles, name=level_role[i - 1]))
-            await ctx.channel.send(embed=discord.Embed(
+            await message.channel.send(embed=discord.Embed(
                     title="New Role Unlocked!",
                     description=f"Congratulations {ctx.author.mention} You have unlocked the new role **{level_role[i]}**",
                     color=0x00ff00,
