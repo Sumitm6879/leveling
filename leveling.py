@@ -9,17 +9,27 @@ from discord.ext.commands import CommandNotFound, MemberNotFound, MissingPermiss
 from pymongo import MongoClient
 import mleveling
 
-intents = discord.Intents().all()
-bot = commands.Bot(command_prefix=';;',
-                   intents=intents)
-bot.remove_command('help')
-
 P = 'sumitm6879sm'
 cluster = MongoClient(
     f"mongodb+srv://{P}:sm6879sm@sambot.ipbu6.mongodb.net/SamBot?retryWrites=true&w=majority"
 )
+bot_prefix = cluster['MysticBot']['bot_prefix']
 print("DB CONNECTED")
 
+
+def get_prefix():
+    stats = bot_prefix.find_one({"_id": bot.user.id})
+    if stats is None:
+        prefix = ';;'
+    else:
+        prefix = stats['prefix']
+        return prefix
+
+
+intents = discord.Intents().all()
+bot = commands.Bot(command_prefix=get_prefix(),
+                   intents=intents)
+bot.remove_command('help')
 cogs = [mleveling]
 
 for i in range(len(cogs)):
@@ -35,6 +45,27 @@ async def on_ready():
     chan = bot.get_channel(721361976957206568)
     await chan.send("Leveling Bot ONline")
 
+
+@bot.command()
+async def set_prefix(ctx, *, prefix: str):
+    stats = bot_prefix.find_one({"_id": bot.user.id})
+    old_prefix = stats['prefix']
+    await ctx.send(f"The old preix was {old_prefix}\nEnter the new Prefix length should be less then 3 characters!\nTimeout in `15 seconds`")
+    try:
+        def check(m):
+            return m.channel.id == ctx.channel.id and m.author.id == ctx.author.id
+        msg = await bot.wait_for('message', check=check, timeout=15)
+    except asyncio.TimeoutError:
+        await ctx.send("Timeout Try again!")
+    else:
+        if len(msg.content) < 3:
+            new_prefix = msg.content
+            bot_prefix.update_one({"_id":bot.user.id}, {"$set":{"prefix":new_prefix}})
+            await ctx.send(f"set the new prefix of bot as `{new_prefix}`")
+        else:
+            await ctx.send("Operation Failed Try again!")
+            
+            
     
 @bot.command()
 async def ping(ctx):
