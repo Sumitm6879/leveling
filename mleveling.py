@@ -407,7 +407,7 @@ async def level_up(message, lvl):
             await message.author.remove_roles(discord.utils.get(message.author.guild.roles, name=level_role[i - 1]))
             await message.channel.send(embed=discord.Embed(
                     title="New Role Unlocked!",
-                    description=f"Congratulations {ctx.author.mention} You have unlocked the new role **{level_role[i]}**",
+                    description=f"Congratulations {message.author.mention} You have unlocked the new role **{level_role[i]}**",
                     color=0x00ff00,
                     timestamp=datetime.datetime.utcnow())
                 )
