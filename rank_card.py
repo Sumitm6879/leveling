@@ -104,7 +104,7 @@ class rank_card(commands.Cog):
                 booster_font = ImageFont.FreeTypeFont('booster.ttf', size=30)
                 draw.text((250, 170), "Perks: ", font=small_font, fill='white')
                 draw.text((335, 160), "Server Booster", font=booster_font, fill='#f47fff')
-                draw.ellipse((27, 27, 203, 203), fill='#f47fff')
+                draw.ellipse((25, 25, 205, 205), fill='#f47fff')
             # users Profile
             pfp = Image.open("user1.png").convert('RGBA')
             pfp = pfp.resize((170, 170))
@@ -143,7 +143,11 @@ class rank_card(commands.Cog):
 
             # NAME OF AUTHOR
             author_font = ImageFont.FreeTypeFont('antic.ttf', size=45)
-            draw.text((250, 100), f"{name}", fill='white', font=author_font)
+            if len(name) > 14:
+                author_font = ImageFont.FreeTypeFont('antic.ttf', size=35)
+                draw.text((250, 107), f"{name}", fill='white', font=author_font)
+            else:
+                draw.text((250, 100), f"{name}", fill='white', font=author_font)
 
             # Final xp
             xp_font = ImageFont.FreeTypeFont('antic.ttf', size=40)
@@ -177,9 +181,9 @@ class rank_card(commands.Cog):
             embed = discord.Embed(title='Backgrounds', description="There are only 2 backgrounds:",
                                   color=0xf47fff)
             if user is None:
-                embed.description += "\n✅ 1 ~-~> **Default**\n❌ 2 ~-~> **Black**"
+                embed.description += "✅ 1 ~-~> **Default**\n❌ 2 ~-~> **Black**"
             else:
-                embed.description += "\n❌ 1 ~-~> **Default**\n✅ 2 ~-~> **Black**"
+                embed.description += "❌ 1 ~-~> **Default**\n✅ 2 ~-~> **Black**"
             return await ctx.send(embed=embed)
         if bg.lower() in ['black', 'dark', 'blk']:
             if user is None:
@@ -200,3 +204,4 @@ class rank_card(commands.Cog):
 
 def setup(bot):
     bot.add_cog(rank_card(bot))
+
