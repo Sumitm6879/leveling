@@ -67,6 +67,8 @@ async def help(ctx, arg: str = None):
         embed.add_field(name=f"{bot.command_prefix}level", value="Shows your level\n**Aliases**\n> `lvl`, `rank`", inline=False)
         embed.add_field(name=f"{bot.command_prefix}leaderboard", value="Shows server Leaderboard\n**Aliases**\n> "
                                                                        "`lb`, `top`", inline=False)
+        embed.add_field(name=f'{bot.command_prefix}background', value='Shows available background\n**Aliases**\n> '
+                                                                      '`bg`, `background`', inline=False) 
         embed.set_thumbnail(url=bot.user.avatar_url)
         embed.set_author(name=f'{ctx.author.name}', icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
