@@ -143,7 +143,7 @@ class rank_card(commands.Cog):
 
             # NAME OF AUTHOR
             author_font = ImageFont.FreeTypeFont('antic.ttf', size=45)
-            if len(name) > 14:
+            if len(name) > 18:
                 author_font = ImageFont.FreeTypeFont('antic.ttf', size=35)
                 draw.text((250, 107), f"{name}", fill='white', font=author_font)
             else:
