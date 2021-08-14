@@ -3,4 +3,4 @@ asyncio
 dnspython
 pymongo
 pillow
-easy_pil
+easy-pil
