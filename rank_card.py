@@ -181,9 +181,9 @@ class rank_card(commands.Cog):
             embed = discord.Embed(title='Backgrounds', description="There are only 2 backgrounds:",
                                   color=0xf47fff)
             if user is None:
-                embed.description += "✅ 1 ~-~> **Default**\n❌ 2 ~-~> **Black**"
+                embed.description += "\n✅ 1 ~-~> **Default**\n❌ 2 ~-~> **Black**"
             else:
-                embed.description += "❌ 1 ~-~> **Default**\n✅ 2 ~-~> **Black**"
+                embed.description += "\n❌ 1 ~-~> **Default**\n✅ 2 ~-~> **Black**"
             return await ctx.send(embed=embed)
         if bg.lower() in ['black', 'dark', 'blk']:
             if user is None:
