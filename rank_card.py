@@ -18,7 +18,9 @@ class rank_card(commands.Cog):
     async def on_ready(self):
         print("rank cards Ready!")
 
-    @commands.command(aliases=['lvl', 'LVL', 'Rank', 'Lvl', 'RANK', 'LvL', 'lVL', 'lvL', 'RAnk', 'rANk', 'raNK', 'RanK', 'RANk', 'rANK'])
+    @commands.command(
+        aliases=['lvl', 'LVL', 'Rank', 'Lvl', 'RANK', 'LvL', 'lVL', 'lvL', 'RAnk', 'rANk', 'raNK', 'RanK', 'RANk',
+                 'rANK'])
     async def rank(self, ctx, member: discord.Member = None):
         if member is None and ctx.message.reference:
             msg = await ctx.channel.fetch_message(id=ctx.message.reference.message_id)
@@ -69,6 +71,7 @@ class rank_card(commands.Cog):
                     embed.set_footer(text='Server Boosters get 2x EXP')
                 await ctx.send(embed=embed)
         else:
+            server_booster = member.guild.get_role(777611697312628776)
             stats = leveling.find_one({"_id": member.id})
             name = str(member)
             xp = stats['xp']
@@ -87,9 +90,21 @@ class rank_card(commands.Cog):
             xp -= ((20 * ((lvl - 1) ** 2)) + (20 * (lvl - 1)))
             percent = round(float((xp / (lvl * 40)) * 100), 2)
             await member.avatar_url.save('user1.png')
+
+            # fonts
+            large_font = ImageFont.FreeTypeFont('antic.ttf', size=60)
+            medium_font = ImageFont.FreeTypeFont('antic.ttf', size=30)
+            small_font = ImageFont.FreeTypeFont('antic.ttf', size=25)
+            extra_small_font = ImageFont.FreeTypeFont('antic.ttf', size=22)
+
             ## Rank Card
             background = Image.open("bjp4.jpg")
-
+            draw = ImageDraw.Draw(background, 'RGB')
+            if server_booster in member.roles:
+                booster_font = ImageFont.FreeTypeFont('booster.ttf', size=30)
+                draw.text((250, 170), "Perks: ", font=small_font, fill='white')
+                draw.text((335, 160), "Server Booster", font=booster_font, fill='#f47fff')
+                draw.ellipse((27, 27, 203, 203), fill='#f47fff')
             # users Profile
             pfp = Image.open("user1.png").convert('RGBA')
             pfp = pfp.resize((170, 170))
@@ -106,14 +121,6 @@ class rank_card(commands.Cog):
             color = color.lstrip('#')
             # convert hex to tuple
             RGB = tuple(int(color[i:i + 2], 16) for i in (0, 2, 4))
-
-            draw = ImageDraw.Draw(background, 'RGB')
-
-            # fonts
-            large_font = ImageFont.FreeTypeFont('antic.ttf', size=60)
-            medium_font = ImageFont.FreeTypeFont('antic.ttf', size=30)
-            small_font = ImageFont.FreeTypeFont('antic.ttf', size=25)
-            extra_small_font = ImageFont.FreeTypeFont('antic.ttf', size=22)
 
             # right upper RANK
             text_size = draw.textsize(f"#{rank}", font=large_font)
@@ -155,18 +162,25 @@ class rank_card(commands.Cog):
             new_background = Editor("pfp.png")
 
             new_background.rectangle((38, 240), width=800, height=30, radius=12, fill='grey')
+            if server_booster in member.roles:
+                new_background.rectangle((250, 150), width=450, height=2, radius=10, fill='#f47fff')
             if percent < 5:
                 percent = 5.00
-            new_background.bar((38, 240), max_width=800, height=30, percentage=percent, radius=12, fill=RGB)
+            new_background.bar((38, 240), max_width=800, height=30, percentage=percent, radius=15, fill=RGB)
             file = discord.File(fp=new_background.image_bytes, filename='member_lvl.png')
             await ctx.send(file=file)
 
     @commands.command(aliases=['bg', 'BACKGROUND', 'Background', 'BG', 'Bg', 'bG'])
     async def background(self, ctx, bg: str = None):
-        if bg is None:
-            return await ctx.send("What are you trying?\nThere are only 2 backgrounds:\n**1** ~-~> default and **2** "
-                                  "~-~> black")
         user = bg_user.find_one({"_id": ctx.author.id})
+        if bg is None:
+            embed = discord.Embed(title='Backgrounds', description="There are only 2 backgrounds:",
+                                  color=0xf47fff)
+            if user is None:
+                embed.description += "✅ 1 ~-~> **Default**\n❌ 2 ~-~> **Black**"
+            else:
+                embed.description += "❌ 1 ~-~> **Default**\n✅ 2 ~-~> **Black**"
+            return await ctx.send(embed=embed)
         if bg.lower() in ['black', 'dark', 'blk']:
             if user is None:
                 new_user = {"_id": ctx.author.id}
