@@ -71,6 +71,17 @@ class rank_card(commands.Cog):
                     embed.set_footer(text='Server Boosters get 2x EXP')
                 await ctx.send(embed=embed)
         else:
+            guest = ctx.guild.get_role(794896587943575563)
+            verified = ctx.guild.get_role(794886884497031168)
+            mem = ctx.guild.get_role(794896588623052830)
+            super_user = ctx.guild.get_role(794896601856475166)
+            Addict = ctx.guild.get_role(794896602694156318)
+            await asyncio.sleep(0.21)
+            Veteran = ctx.guild.get_role(794896707971973132)
+            Extreme_user = ctx.guild.get_role(794896709380866098)
+            godly = ctx.guild.get_role(796353896478015549)
+            above_all = ctx.guild.get_role(796354367711870997)
+            legend = ctx.guild.get_role(794896709380866098)
             server_booster = member.guild.get_role(777611697312628776)
             stats = leveling.find_one({"_id": member.id})
             name = str(member)
@@ -100,8 +111,8 @@ class rank_card(commands.Cog):
             ## Rank Card
             background = Image.open("bjp4.jpg")
             draw = ImageDraw.Draw(background, 'RGB')
+            booster_font = ImageFont.FreeTypeFont('booster.ttf', size=30)
             if server_booster in member.roles:
-                booster_font = ImageFont.FreeTypeFont('booster.ttf', size=30)
                 draw.text((250, 170), "Perks: ", font=small_font, fill='white')
                 draw.text((335, 160), "Server Booster", font=booster_font, fill='#f47fff')
                 draw.ellipse((25, 25, 205, 205), fill='#f47fff')
@@ -143,11 +154,44 @@ class rank_card(commands.Cog):
 
             # NAME OF AUTHOR
             author_font = ImageFont.FreeTypeFont('antic.ttf', size=45)
-            if len(name) > 18:
+            if len(name) > 17:
                 author_font = ImageFont.FreeTypeFont('antic.ttf', size=35)
-                draw.text((250, 107), f"{name}", fill='white', font=author_font)
+                draw.text((250, 105), f"{name}", fill='white', font=author_font)
             else:
                 draw.text((250, 100), f"{name}", fill='white', font=author_font)
+
+            # Rank and Role of Author
+            draw.text((250, 160), "Current Rank: ", fill='grey', font=small_font)
+            if verified in member.roles:
+                role_name = verified.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif guest in member.roles:
+                role_name = guest.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif mem in member.roles:
+                role_name = mem.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif super_user in member.roles:
+                role_name = super_user.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif Addict in member.roles:
+                role_name = Addict.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif Veteran in member.roles:
+                role_name = Veteran.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif Extreme_user in member.roles:
+                role_name = Extreme_user.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif godly in member.roles:
+                role_name = godly.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif above_all in member.roles:
+                role_name = above_all.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif legend in member.roles:
+                role_name = legend.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
 
             # Final xp
             xp_font = ImageFont.FreeTypeFont('antic.ttf', size=40)
@@ -167,7 +211,9 @@ class rank_card(commands.Cog):
 
             new_background.rectangle((38, 240), width=800, height=30, radius=12, fill='grey')
             if server_booster in member.roles:
-                new_background.rectangle((250, 150), width=450, height=2, radius=10, fill='#f47fff')
+                new_background.rectangle((250, 146), width=450, height=2, radius=10, fill='#f47fff')
+            else:
+                new_background.rectangle((250, 146), width=450, height=2, radius=10, fill=RGB)
             if percent < 5:
                 percent = 5.00
             new_background.bar((38, 240), max_width=800, height=30, percentage=percent, radius=15, fill=RGB)
