@@ -21,7 +21,7 @@ class rank_card(commands.Cog):
 
     @commands.command(
         aliases=['lvl', 'LVL', 'Rank', 'Lvl', 'RANK', 'LvL', 'lVL', 'lvL', 'RAnk', 'rANk', 'raNK', 'RanK', 'RANk',
-                 'rANK'])
+                 'rANK', 'level', 'LEVEL', 'Level', 'LeVeL', 'LEvel', 'LEVel', 'LEVEl', 'lEVEL', 'leVEL', 'levEL', 'leveL'])
     async def rank(self, ctx, member: discord.Member = None):
         if member is None and ctx.message.reference:
             msg = await ctx.channel.fetch_message(id=ctx.message.reference.message_id)
@@ -114,7 +114,7 @@ class rank_card(commands.Cog):
             draw = ImageDraw.Draw(background, 'RGB')
             booster_font = ImageFont.FreeTypeFont('booster.ttf', size=30)
             if server_booster in member.roles:
-                draw.text((250, 193), "Perks: ", font=small_font, fill='grey')
+                draw.text((250, 193), "Perks: ", font=small_font, fill='white')
                 draw.text((335, 185), "Server Booster", font=booster_font, fill='#f47fff')
                 draw.ellipse((25, 25, 205, 205), fill='#f47fff')
             # users Profile
@@ -197,7 +197,7 @@ class rank_card(commands.Cog):
             # Final xp
             xp_font = ImageFont.FreeTypeFont('antic.ttf', size=40)
             text_size = draw.textsize(f"/ {int((80 * (1 / 2) * lvl))} XP", font=xp_font)
-            x = 800 - text_size[0]
+            x = 865 - text_size[0]
             y = 203
             draw.text((x, y), f"/ {int((80 * (1 / 2) * lvl))} XP", font=xp_font, fill='#727175')
 
@@ -210,14 +210,14 @@ class rank_card(commands.Cog):
 
             new_background = Editor("pfp.png")
 
-            new_background.rectangle((38, 240), width=800, height=30, radius=12, fill='grey')
+            new_background.rectangle((38, 240), width=840, height=30, radius=12, fill='grey')
             if server_booster in member.roles:
                 new_background.rectangle((250, 146), width=450, height=2, radius=10, fill='#f47fff')
             else:
                 new_background.rectangle((250, 146), width=450, height=2, radius=10, fill=RGB)
             if percent < 5:
                 percent = 5.00
-            new_background.bar((38, 240), max_width=800, height=30, percentage=percent, radius=15, fill=RGB)
+            new_background.bar((38, 240), max_width=840, height=30, percentage=percent, radius=15, fill=RGB)
             file = discord.File(fp=new_background.image_bytes, filename='member_lvl.png')
             await ctx.send(file=file)
 
@@ -231,6 +231,7 @@ class rank_card(commands.Cog):
                 embed.description += "\n✅ 1 ~-~> **Default**\n❌ 2 ~-~> **Black**"
             else:
                 embed.description += "\n❌ 1 ~-~> **Default**\n✅ 2 ~-~> **Black**"
+            embed.set_footer(text=f'{self.bot.command_prefix}bg [name]', icon_url=self.bot.avatar_url)
             return await ctx.send(embed=embed)
         if bg.lower() in ['black', 'dark', 'blk']:
             if user is None:
