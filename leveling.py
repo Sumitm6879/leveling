@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 from os import name
 import discord
@@ -8,7 +9,7 @@ from discord.ext.commands import CommandNotFound, MemberNotFound, MissingPermiss
     BadArgument, CommandOnCooldown
 from pymongo import MongoClient
 import mleveling
-
+import rank_card
 
 P = 'sumitm6879sm'
 cluster = MongoClient(
@@ -21,9 +22,8 @@ print("DB CONNECTED")
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix=';;',
                    intents=intents)
-print(bot.command_prefix)
 bot.remove_command('help')
-cogs = [mleveling]
+cogs = [mleveling, rank_card]
 
 for i in range(len(cogs)):
     cogs[i].setup(bot)
@@ -32,12 +32,13 @@ for i in range(len(cogs)):
 
 @bot.event
 async def on_ready():
+    await bot.change_presence(status=discord.Status.online,
+                              activity=discord.Activity(type=discord.ActivityType.listening, name='>> Mystic help <<'))
     print("Logged in as: " + bot.user.name + "\n")
     chan = bot.get_channel(721361976957206568)
     await chan.send("Leveling Bot ONline")
-            
-            
-    
+
+
 @bot.command()
 async def ping(ctx):
     numbers = {0: '𝟘', 1: '𝟙', 2: '𝟚', 3: '𝟛', 4: '𝟜', 5: '𝟝', 6: '𝟞', 7: '𝟟', 8: '𝟠', 9: '𝟡'}
@@ -51,7 +52,7 @@ async def ping(ctx):
     embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
     embed.set_footer(text=f"{bot.command_prefix}help to get more info.", icon_url=bot.user.avatar_url)
     await ctx.send(embed=embed)
-    
+
 
 @bot.command(aliases=['h', 'H', 'HELP', 'Help', 'HElp'])
 async def help(ctx, arg: str = None):
