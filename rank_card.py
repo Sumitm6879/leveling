@@ -1,5 +1,3 @@
-from msilib.schema import File
-
 import discord
 from discord.ext import commands
 from pymongo import MongoClient, message
