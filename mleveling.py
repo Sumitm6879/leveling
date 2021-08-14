@@ -12,11 +12,14 @@ leveling = cluster['MysticBot']['levels']
 # level Roles
 level_role = ['Verified', 'Guest', 'Member', 'Super User', 'Addict', 'Veteran', 'Extreme user', 'Godly', 'Above all',
               'Legend']
+
 levelnum = [2, 5, 10, 20, 40, 80, 120, 150, 180, 200]
 
 no_xp_channels = [794815002095386654]
 blacklist_words = [';lvl', ';rank', ';help']
+
 prefix = [';', 'mh', 'mb', 'MH', 'MB', 'Mh', 'Mb', 'mH', 'mB', '.']
+
 
 class Leveling(commands.Cog):
     def __init__(self, bot):
@@ -31,6 +34,7 @@ class Leveling(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Leveling system ONline")
+        member = self.bot.fetch_user
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -65,6 +69,8 @@ class Leveling(commands.Cog):
                     xp -= ((20 * ((lvl - 1) ** 2)) + (20 * (lvl - 1)))
                     if xp == 0:
                         xp = stats['xp'] + 2
+                        print(stats['xp'])
+                        print(xp)
                         leveling.update_one({"_id": message.author.id}, {"$set": {"xp": xp}})
                         await asyncio.create_task(level_up(message, lvl))
                     elif xp == 1:
@@ -75,59 +81,7 @@ class Leveling(commands.Cog):
                 else:
                     return
 
-    @commands.command(aliases=['lvl', 'Rank', 'level', 'LVL', 'Lvl'])
-    async def rank(self, ctx, member: discord.Member = None):
-        if member is None and ctx.message.reference:
-            msg = await ctx.channel.fetch_message(id=ctx.message.reference.message_id)
-            member = msg.author
-        if member is None:
-            member = ctx.author
-        if member.bot is True:
-            return await ctx.send("You cannot check the Level of Bots")
-        stats = leveling.find_one({"_id": member.id})
-        if stats is None:
-            if member == ctx.author:
-                await ctx.send("You don't have any Level to see")
-            else:
-                await ctx.send(f"{member.name} has no Level")
-        else:
-            xp = stats['xp']
-            lvl = 0
-            while True:
-                if xp < ((20 * (lvl ** 2)) + (20 * lvl)):
-                    break
-                lvl += 1
-            # xp -= ((20*((lvl-1)**2))+(20*(lvl-1)))
-            ranking = leveling.find().sort('xp', -1)
-            rank = 0
-            for x in ranking:
-                rank += 1
-                if member.id == x['_id']:
-                    break
-            xp -= ((20 * ((lvl - 1) ** 2)) + (20 * (lvl - 1)))
-            boxes = int((xp / (80 * ((1 / 2) * lvl))) * 10)
-            percent = round(float((xp / (lvl * 40)) * 100), 2)
-            # color = ['🟥', '🟧', '🟨', '🟩', '🟦', '🟫']
-            colors = ['🧡', '💛', '💚', '💙', '💜', '🤎', '🤍']
-            emoji_1 = '❤️'
-            emoji_2 = '🖤'
-            progress_bar = boxes * emoji_1 + (10 - boxes) * emoji_2
-            embed = discord.Embed(
-                title=f"{member.name}'s Rank",
-                description=f"Name: **{member.mention}**\nExp: **{xp}/{int((80 * (1 / 2) * lvl))}**\nLevel: **{lvl}** | Rank: **#{rank}**",
-                color=discord.Color.random(),
-                timestamp=datetime.datetime.utcnow()
-            )
-            embed.add_field(name=f"Progress: {percent}%", value=f"`{progress_bar}`")
-            embed.set_thumbnail(url=member.avatar_url)
-            server_booster = member.guild.get_role(777611697312628776)
-            if server_booster in member.roles:
-                embed.description += f"\nPerks: {server_booster.mention}"
-                embed.set_footer(text='Server Boosters get 2x EXP')
-            await ctx.send(embed=embed)
-            # await ctx.send(f"Your xp {member.name}: **{xp}/{int((80*(1/2)*lvl))}**\nLevel: **{lvl}** | Rank: #{rank}\nProgress: **{percent}%**\n{progress_bar}")
-
-    @commands.command(aliases=['lb', 'top', 'Top', 'TOP', 'ToP', 'tOP','TOp','LB','lB','Lb'])
+    @commands.command(aliases=['lb', 'top'])
     async def leaderboard(self, ctx, page: int = None):
         if page is None or page == 1:
             ranking = leveling.find().sort('xp', -1)
@@ -185,7 +139,7 @@ class Leveling(commands.Cog):
             if embed.description == "":
                 embed.description += "No Data to show"
             await ctx.send(embed=embed)
-            
+
         if page == 3:
             ranking = leveling.find().sort('xp', -1).skip(20)
             i = 21
@@ -208,7 +162,7 @@ class Leveling(commands.Cog):
             if embed.description == "":
                 embed.description += "No Data to show"
             await ctx.send(embed=embed)
-            
+
         if page == 4:
             ranking = leveling.find().sort('xp', -1).skip(30)
             i = 31
@@ -231,7 +185,7 @@ class Leveling(commands.Cog):
             if embed.description == "":
                 embed.description += "No Data to show"
             await ctx.send(embed=embed)
-        
+
         if page == 5:
             ranking = leveling.find().sort('xp', -1).skip(40)
             i = 41
@@ -406,11 +360,11 @@ async def level_up(message, lvl):
             await message.author.add_roles(discord.utils.get(message.author.guild.roles, name=level_role[i]))
             await message.author.remove_roles(discord.utils.get(message.author.guild.roles, name=level_role[i - 1]))
             await message.channel.send(embed=discord.Embed(
-                    title="New Role Unlocked!",
-                    description=f"Congratulations {message.author.mention} You have unlocked the new role **{level_role[i]}**",
-                    color=0x00ff00,
-                    timestamp=datetime.datetime.utcnow())
-                )
+                title="New Role Unlocked!",
+                description=f"Congratulations {message.author.mention} You have unlocked the new role **{level_role[i]}**",
+                color=0x00ff00,
+                timestamp=datetime.datetime.utcnow())
+            )
             embed.description += f"\nNew Role: **{level_role[i]}**"
     await chan.send(embed=embed)
 
@@ -423,7 +377,9 @@ async def verify_level_up(ctx, xp, stats):
         lvl += 1
     xp -= ((20 * ((lvl - 1) ** 2)) + (20 * (lvl - 1)))
     if xp == 0:
-        xp = stats['xp'] + 2
+        xp = stats['xp'] + 1
+        print(stats['xp'])
+        print(xp)
         leveling.update_one({"_id": message.author.id}, {"$set": {"xp": xp}})
         chan = ctx.author.guild.get_channel(874705596597813288)
         embed = discord.Embed(
@@ -446,6 +402,7 @@ async def verify_level_up(ctx, xp, stats):
                 embed.description += f"\nNew Role: **{level_role[i]}**"
         await chan.send(embed=embed)
     elif xp == 1:
+        xp -= 1
         xp = stats['xp'] + 1
         leveling.update_one({"_id": message.author.id}, {"$set": {"xp": xp}})
         chan = ctx.author.guild.get_channel(874705596597813288)
