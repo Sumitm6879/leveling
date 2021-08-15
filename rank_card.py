@@ -163,35 +163,35 @@ class rank_card(commands.Cog):
 
             # Rank and Role of Author
             draw.text((250, 160), "Current Rank: ", fill='grey', font=small_font)
-            if verified in member.roles:
-                role_name = verified.name
-                draw.text((420, 153), role_name, fill='white', font=booster_font)
-            elif guest in member.roles:
-                role_name = guest.name
-                draw.text((420, 153), role_name, fill='white', font=booster_font)
-            elif mem in member.roles:
-                role_name = mem.name
-                draw.text((420, 153), role_name, fill='white', font=booster_font)
-            elif super_user in member.roles:
-                role_name = super_user.name
-                draw.text((420, 153), role_name, fill='white', font=booster_font)
-            elif Addict in member.roles:
-                role_name = Addict.name
-                draw.text((420, 153), role_name, fill='white', font=booster_font)
-            elif Veteran in member.roles:
-                role_name = Veteran.name
-                draw.text((420, 153), role_name, fill='white', font=booster_font)
-            elif Extreme_user in member.roles:
-                role_name = Extreme_user.name
-                draw.text((420, 153), role_name, fill='white', font=booster_font)
-            elif godly in member.roles:
-                role_name = godly.name
+            if legend in member.roles:
+                role_name = legend.name
                 draw.text((420, 153), role_name, fill='white', font=booster_font)
             elif above_all in member.roles:
                 role_name = above_all.name
                 draw.text((420, 153), role_name, fill='white', font=booster_font)
-            elif legend in member.roles:
-                role_name = legend.name
+            elif godly in member.roles:
+                role_name = godly.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif Extreme_user in member.roles:
+                role_name = Extreme_user.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif Veteran in member.roles:
+                role_name = Veteran.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif Addict in member.roles:
+                role_name = Addict.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif super_user in member.roles:
+                role_name = super_user.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif mem in member.roles:
+                role_name = mem.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif guest in member.roles:
+                role_name = guest.name
+                draw.text((420, 153), role_name, fill='white', font=booster_font)
+            elif verified in member.roles:
+                role_name = verified.name
                 draw.text((420, 153), role_name, fill='white', font=booster_font)
 
             # Final xp
