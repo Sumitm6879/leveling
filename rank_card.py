@@ -55,7 +55,7 @@ class rank_card(commands.Cog):
                 xp -= ((20 * ((lvl - 1) ** 2)) + (20 * (lvl - 1)))
                 boxes = int((xp / (80 * ((1 / 2) * lvl))) * 10)
                 percent = round(float((xp / (lvl * 40)) * 100), 2)
-                emoji_1 = '❤'
+                emoji_1 = '❤️'
                 emoji_2 = '🖤'
                 progress_bar = boxes * emoji_1 + (10 - boxes) * emoji_2
                 embed = discord.Embed(
