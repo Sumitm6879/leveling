@@ -81,12 +81,12 @@ class Leveling(commands.Cog):
                 else:
                     return
 
-    @commands.command(aliases=['lb', 'top'])
+    @commands.command(aliases=['lb', 'top', 'TOP', 'LB', 'Lb', 'lB', 'Top', 'TOp', 'tOP', 'ToP', 'tOp', 'toP'])
     async def leaderboard(self, ctx, page: int = None):
         if page is None or page == 1:
             ranking = leveling.find().sort('xp', -1)
             i = 1
-            embed = discord.Embed(title=f"{ctx.guild.name}'s Leaderboard", description="", color=0xff0000,
+            embed = discord.Embed(title=f"{ctx.guild.name}'s Leaderboard", description="# ┃ 🔹 Name 🔹 ┃ 🔸 Level 🔸\n", color=0xff0000,
                                   timestamp=datetime.datetime.utcnow())
             embed.set_thumbnail(url=ctx.guild.icon_url)
             for x in ranking:
@@ -114,13 +114,13 @@ class Leveling(commands.Cog):
                     break
             embed.add_field(
                 name='More Members',
-                value='> `;lb 2`'
+                value='> Example:-`;top 2` (up to 5 pages)'
             )
             await ctx.send(embed=embed)
         if page == 2:
             ranking = leveling.find().sort('xp', -1).skip(10)
             i = 11
-            embed = discord.Embed(title=f"{ctx.guild.name}'s Leaderboard [{page}]", description="", color=0xff0000,
+            embed = discord.Embed(title=f"{ctx.guild.name}'s Leaderboard [{page}]", description="# ┃ 🔹 Name 🔹 ┃ 🔸 Level 🔸\n", color=0xff0000,
                                   timestamp=datetime.datetime.utcnow())
             embed.set_thumbnail(url=ctx.guild.icon_url)
             for x in ranking:
@@ -143,7 +143,7 @@ class Leveling(commands.Cog):
         if page == 3:
             ranking = leveling.find().sort('xp', -1).skip(20)
             i = 21
-            embed = discord.Embed(title=f"{ctx.guild.name}'s Leaderboard [{page}]", description="", color=0xff0000,
+            embed = discord.Embed(title=f"{ctx.guild.name}'s Leaderboard [{page}]", description="# ┃ 🔹 Name 🔹 ┃ 🔸 Level 🔸\n", color=0xff0000,
                                   timestamp=datetime.datetime.utcnow())
             embed.set_thumbnail(url=ctx.guild.icon_url)
             for x in ranking:
@@ -166,7 +166,7 @@ class Leveling(commands.Cog):
         if page == 4:
             ranking = leveling.find().sort('xp', -1).skip(30)
             i = 31
-            embed = discord.Embed(title=f"{ctx.guild.name}'s Leaderboard [{page}]", description="", color=0xff0000,
+            embed = discord.Embed(title=f"{ctx.guild.name}'s Leaderboard [{page}]", description="# ┃ 🔹 Name 🔹 ┃ 🔸 Level 🔸\n", color=0xff0000,
                                   timestamp=datetime.datetime.utcnow())
             embed.set_thumbnail(url=ctx.guild.icon_url)
             for x in ranking:
@@ -189,7 +189,7 @@ class Leveling(commands.Cog):
         if page == 5:
             ranking = leveling.find().sort('xp', -1).skip(40)
             i = 41
-            embed = discord.Embed(title=f"{ctx.guild.name}'s Leaderboard [{page}]", description="", color=0xff0000,
+            embed = discord.Embed(title=f"{ctx.guild.name}'s Leaderboard [{page}]", description="# ┃ 🔹 Name 🔹 ┃ 🔸 Level 🔸\n", color=0xff0000,
                                   timestamp=datetime.datetime.utcnow())
             embed.set_thumbnail(url=ctx.guild.icon_url)
             for x in ranking:
