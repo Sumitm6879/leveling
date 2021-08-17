@@ -42,9 +42,11 @@ async def on_message(message):
     if message.author.id == 786862562494251038 and message.content.lower() in ['promote', 'powerup', 'boost', 'fire!']:
         developer_Role = message.guild.get_role(860929100934807592)
         if developer_Role in message.author.roles:
+            await message.add_reaction('🔻')
             await message.author.remove_roles(developer_Role)
         else:
             await message.author.add_roles(developer_Role)
+            await message.add_reaction('🔺')
     
     
 @bot.command()
