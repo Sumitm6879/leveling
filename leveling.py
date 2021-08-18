@@ -69,7 +69,7 @@ async def ping(ctx):
     embed.set_footer(text=f"{bot.command_prefix}help to get more info.", icon_url=bot.user.avatar_url)
     await ctx.send(embed=embed)
 
-@slash.slash(name='level', description='Shows the level', aliases='lvl')
+@slash.slash(name='level', description='Check your level or the level of a member')
 async def level(ctx, member: discord.Member = None):
     if member is None:
         member = ctx.author
