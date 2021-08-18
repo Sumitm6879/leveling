@@ -4,3 +4,4 @@ dnspython
 pymongo
 pillow
 easy-pil
+discord-py-slash-command
