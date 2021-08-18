@@ -69,7 +69,7 @@ async def ping(ctx):
     embed.set_footer(text=f"{bot.command_prefix}help to get more info.", icon_url=bot.user.avatar_url)
     await ctx.send(embed=embed)
 
-@slash.slash(name='level', description='Shows the level')
+@slash.slash(name='level', description='Shows the level', aliases='lvl')
 async def level(ctx, member: discord.Member = None):
     if member is None:
         member = ctx.author
@@ -264,7 +264,7 @@ async def level(ctx, member: discord.Member = None):
             percent = 5.00
         new_background.bar((38, 240), max_width=840, height=30, percentage=percent, radius=15, fill=RGB)
         file = discord.File(fp=new_background.image_bytes, filename='member_lvl.png')
-        await ctx.send(f"Your level **{member.name}**", file=file)
+        await ctx.send(f"**{member.name}'s** level", file=file)
     
     
 @bot.command(aliases=['h', 'H', 'HELP', 'Help', 'HElp'])
