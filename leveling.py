@@ -264,7 +264,7 @@ async def level(ctx, member: discord.Member = None):
             percent = 5.00
         new_background.bar((38, 240), max_width=840, height=30, percentage=percent, radius=15, fill=RGB)
         file = discord.File(fp=new_background.image_bytes, filename='member_lvl.png')
-        await ctx.channel.send(file=file)
+        await ctx.send(f"Your level **{member.name}**", file=file)
     
     
 @bot.command(aliases=['h', 'H', 'HELP', 'Help', 'HElp'])
