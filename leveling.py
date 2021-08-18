@@ -25,7 +25,7 @@ print("DB CONNECTED")
 
 
 intents = discord.Intents().all()
-bot = commands.Bot(command_prefix=';;',
+bot = commands.Bot(command_prefix=';',
                    intents=intents)
 slash = SlashCommand(bot, sync_commands=True)
 bot.remove_command('help')
