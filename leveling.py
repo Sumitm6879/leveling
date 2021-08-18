@@ -18,6 +18,8 @@ P = 'sumitm6879sm'
 cluster = MongoClient(
     f"mongodb+srv://{P}:sm6879sm@sambot.ipbu6.mongodb.net/SamBot?retryWrites=true&w=majority"
 )
+leveling = cluster['MysticBot']['levels']
+bg_user = cluster['MysticBot']['bg_user']
 bot_prefix = cluster['MysticBot']['bot_prefix']
 print("DB CONNECTED")
 
