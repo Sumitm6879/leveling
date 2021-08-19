@@ -70,7 +70,7 @@ async def ping(ctx):
     await ctx.send(embed=embed)
 
 @slash.slash(name='level', description='Check your level or the level of a member')
-async def level(ctx, member: discord.Member = None):
+async def lvl(ctx, member: discord.Member = None):
     if member is None:
         member = ctx.author
     if member.bot is True:
