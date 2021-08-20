@@ -159,7 +159,7 @@ async def lvl(ctx, member: discord.Member = None):
         draw = ImageDraw.Draw(background, 'RGB')
         booster_font = ImageFont.FreeTypeFont('booster.ttf', size=30)
         if server_booster in member.roles:
-            draw.text((250, 193), "Perks: ", font=small_font, fill='white')
+            draw.text((250, 193), "Perks: ", font=small_font, fill='grey')
             draw.text((335, 185), "Server Booster", font=booster_font, fill='#f47fff')
             draw.ellipse((25, 25, 205, 205), fill='#f47fff')
         # users Profile
