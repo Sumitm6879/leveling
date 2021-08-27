@@ -255,7 +255,7 @@ async def lvl(ctx, member: discord.Member = None):
 
         new_background = Editor("pfp.png")
 
-        new_background.rectangle((38, 240), width=840, height=30, radius=12, fill='grey')
+        new_background.rectangle((38, 240), width=840, height=30, radius=12, outline='grey')
         if server_booster in member.roles:
             new_background.rectangle((250, 146), width=450, height=2, radius=10, fill='#f47fff')
         else:
