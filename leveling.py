@@ -195,7 +195,7 @@ async def lvl(ctx, member: discord.Member = None):
         draw.text((offset_x, 13), f"{lvl}", fill=RGB, font=large_font)
 
         text_size = draw.textsize('LEVEL', font=small_font)
-        offset_x -= text_size[0] + 5
+        offset_x -= text_size[0] + 6
         draw.text((offset_x, offset_y + 30), text='LEVEL', font=small_font, fill="grey")
 
         # NAME OF AUTHOR
