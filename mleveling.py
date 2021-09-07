@@ -39,7 +39,7 @@ class Leveling(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.content not in blacklist_words and len(
-                message.content) > 3 and not message.content.startswith(tuple(prefix)):
+                message.content) > 3 and not message.content.startswith(tuple(prefix)) and message.guild.id == 705513318747602944:
             if message.author.bot or message.channel.id in no_xp_channels:
                 return
             ratelimit = self.get_ratelimit(message)
