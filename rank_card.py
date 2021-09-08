@@ -217,7 +217,7 @@ class rank_card(commands.Cog):
                 new_background.rectangle((250, 146), width=450, height=2, radius=10, fill=RGB)
             if percent < 5:
                 percent = 5.00
-            new_background.bar((38, 240), max_width=840, height=30, percentage=percent, radius=10, fill=RGB)
+            new_background.bar((37, 240), max_width=840, height=30, percentage=percent, radius=12, fill=RGB)
             file = discord.File(fp=new_background.image_bytes, filename='member_lvl.png')
             await ctx.send(file=file)
 
