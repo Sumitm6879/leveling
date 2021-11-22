@@ -141,7 +141,7 @@ class Economy(commands.Cog):
     @beg.error
     async def beg_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
-            em = discord.Embed(title=f"Cooldown!",description=f"Try again in **{error.retry_after:.2f}s**.", color=embed_color)
+            em = discord.Embed(title=f"Cooldown!",description=f"Try again in **{error.retry_after:.0f}s**.", color=embed_color)
             await ctx.send(embed=em)
 
 
