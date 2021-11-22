@@ -11,12 +11,17 @@ cluster = MongoClient(
 leveling = cluster['MysticBot']['levels']
 profile = cluster['Economy']['economy-profile']
 
+#embed specifications
+embed_color = 0x2a72f7
+
 #beg choice
 failed_beg_choice = [
-    "Lmao you didn't find anyone **{ctx.author.name}**",
-    "**{ctx.author.name}** you broke? badluck!",
-    "**{ctx.author.name}** No Begging in the server you wanna get mute?",
-    "**{ctx.author.name}** You looked around but there are no people around"]
+    "Lmao you didn't find anyone",
+    "you broke? badluck!",
+    "No Begging in the server you wanna get mute?",
+    "You looked around but there are no people around"]
+
+
 
 class Economy(commands.Cog):
     def __init__(self, bot):
@@ -109,6 +114,7 @@ class Economy(commands.Cog):
         
 
     @commands.command()
+    @commands.cooldown(1, 180, commands.BucketType.user)
     async def beg(self, ctx):
         search = player_search(ctx.author.id)
         if search:
@@ -127,9 +133,16 @@ class Economy(commands.Cog):
                 await ctx.send(f"**{ctx.author.name}** you earned 🪙**{new_wallet}**")
             else:
                 failed_sentence = random.choice(failed_beg_choice)
-                await ctx.send(f"{failed_sentence}")
+                await ctx.send(f"**{ctx.author.name}** {failed_sentence}")
         else:
-            await ctx.send(f"**{ctx.author.name}** new to this? consider `;start` to get started")
+            welcm = new_to_this(ctx)
+            await ctx.send(welcm)
+
+    @beg.error
+    async def beg_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            em = discord.Embed(title=f"Cooldown!",description=f"Try again in **{error.retry_after:.2f}s**.", color=embed_color)
+            await ctx.send(embed=em)
 
 
 def setup(bot):
@@ -147,7 +160,7 @@ def balance_embed(member, wallet, bank):
     embed = discord.Embed(
         title = "Balance",
         description = f"🪙 **Wallet:** {wallet}\n🏦 **Bank:** {bank}",
-        color = 0x2a72f7,
+        color = embed_color,
         timestamp = datetime.datetime.utcnow())
     embed.set_author(name=f"{member.name}", url=member.avatar_url)
     embed.set_thumbnail(url=member.avatar_url)
@@ -170,3 +183,7 @@ def convert_str_to_number(no):
         if len(no) > 1:
             total_stars = float(no[:-1]) * num_map.get(no[-1].upper(), 1)
     return int(total_stars)
+
+def new_to_this(ctx):
+    tada = f"**{ctx.author.name}** new to this? consider `;start` to get started"
+    return tada
