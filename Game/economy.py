@@ -2,7 +2,7 @@ import datetime
 from typing import Text
 import discord
 from discord.ext import commands
-from pymongo import MonoClient
+from pymongo import MongoClient
 
 P = 'sumitm6879sm'
 cluster = MongoClient(
