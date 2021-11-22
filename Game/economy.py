@@ -58,7 +58,7 @@ def player_search(player_id):
 def balance_embed(member, wallet, bank):
     embed = discord.Embed(
         title = "Balance",
-        description = "**Wallet:** {wallet}\n**Bank:** {bank}",
+        description = f"**Wallet:** {wallet}\n**Bank:** {bank}",
         color = 0x2a72f7,
         timestamp = datetime.datetime.utcnow())
     embed.set_author(name=f"{member.name}", url=member.avatar_url)
