@@ -62,5 +62,5 @@ def balance_embed(member, wallet, bank):
         color = 0x2a72f7,
         timestamp = datetime.datetime.utcnow())
     embed.set_author(name=f"{member.name}", url=member.avatar_url)
-    embed.set_thumbnail(url=member.avatar_ur)
+    embed.set_thumbnail(url=member.avatar_url)
     return embed
