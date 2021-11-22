@@ -61,10 +61,13 @@ class Economy(commands.Cog):
     @commands.command()
     async def deposit(self, ctx, money:str):
         search = player_search(ctx.author.id)
+        stats = profile.find_one({"_id": ctx.author.id})
         if search:
-            money = convert_str_to_number(money)
+            if money == "all":
+                money = stats['wallet']
+            else:
+                money = convert_str_to_number(money)
             if isinstance(money, int):
-                stats = profile.find_one({"_id": ctx.author.id})
                 old_wallet = stats['wallet']
                 if money <= old_wallet:
                     new_wallet = old_wallet-money
@@ -83,10 +86,13 @@ class Economy(commands.Cog):
     @commands.command()
     async def withdraw(self, ctx, money:str):
         search = player_search(ctx.author.id)
+        stats = profile.find_one({"_id": ctx.author.id})
         if search:
-            money = convert_str_to_number(money)
+            if money.lower() == "all":
+                money = stats['bank']
+            else:
+                money = convert_str_to_number(money)
             if isinstance(money, int):
-                stats = profile.find_one({"_id": ctx.author.id})
                 old_bank = stats['bank']
                 if money <= old_bank:
                     new_wallet = stats['wallet'] + money
