@@ -151,10 +151,11 @@ class Economy(commands.Cog):
             msg = await ctx.channel.fetch_message(id=ctx.message.reference.message_id)
             member = msg.author
         if member is None:
+            msg = ctx.message
             member = ctx.author
         beg = self.bot.get_command('beg')
-        if beg.is_on_cooldown(member):
-            minutes, seconds= divmod(int(beg.get_cooldown_retry_after(member)), 60) 
+        if beg.is_on_cooldown(msg):
+            minutes, seconds= divmod(int(beg.get_cooldown_retry_after(msg)), 60) 
             beg_emoji, beg_time = "🕐", f"{minutes}m {seconds}s"
         else:
             beg_emoji, beg_time = "✅", f""
