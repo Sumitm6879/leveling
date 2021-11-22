@@ -46,6 +46,10 @@ class Economy(commands.Cog):
         else:
             if member == ctx.author:
                 await ctx.send(f"**{member.name}** new to this? consider `;start` to get started")
+            elif member != ctx.author:
+                await ctx.send(f"**{member.name}** has never played")
+            elif member.bot:
+                await ctx.send("You cannot check balance of a bot")
 
 
 def setup(bot):
