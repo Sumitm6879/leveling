@@ -158,7 +158,7 @@ class Economy(commands.Cog):
             minutes, seconds= divmod(int(beg.get_cooldown_retry_after(ctx)), 60) 
             beg_emoji, beg_time = "🕐", f"{minutes}m {seconds}s"
         else:
-            beg_emoji, beg_time = "✅", f""
+            beg_emoji, beg_time = "✅", f"Ready"
         
         em = cooldown_embed(ctx, beg_emoji, beg_time)
         await ctx.send(embed=em)
