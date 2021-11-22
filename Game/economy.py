@@ -147,20 +147,20 @@ class Economy(commands.Cog):
     
     @commands.command()
     async def cooldown(self, ctx, member:discord.Member=None):
-        if member is None and ctx.message.reference:
-            msg = await ctx.channel.fetch_message(id=ctx.message.reference.message_id)
-            member = msg.author
-        if member is None:
-            msg = ctx.message
-            member = ctx.author
+        # if member is None and ctx.message.reference:
+        #     msg = await ctx.channel.fetch_message(id=ctx.message.reference.message_id)
+        #     member = msg.author
+        # if member is None:
+        #     msg = ctx.message
+        #     member = ctx.author
         beg = self.bot.get_command('beg')
-        if beg.is_on_cooldown(msg):
-            minutes, seconds= divmod(int(beg.get_cooldown_retry_after(msg)), 60) 
+        if beg.is_on_cooldown(ctx):
+            minutes, seconds= divmod(int(beg.get_cooldown_retry_after(ctx)), 60) 
             beg_emoji, beg_time = "🕐", f"{minutes}m {seconds}s"
         else:
             beg_emoji, beg_time = "✅", f""
         
-        em = cooldown_embed(member, beg_emoji, beg_time)
+        em = cooldown_embed(ctx, beg_emoji, beg_time)
         await ctx.send(embed=embed)
 
         
@@ -209,11 +209,11 @@ def new_to_this(ctx):
     tada = f"**{ctx.author.name}** new to this? consider `;start` to get started"
     return tada
 
-def cooldown_embed(member, beg_emoji, beg_time):
+def cooldown_embed(ctx, beg_emoji, beg_time):
     embed = discord.Embed(
         title="Commands",
         description=f"{emoji} **|** `Beg` (**{beg_time}**)",
         color= embed_color,
         timestamp = datetime.datetime.utcnow())
-    embed.set_author(name=member.name, icon_url=member.avatar_url)
+    embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
     return embed
