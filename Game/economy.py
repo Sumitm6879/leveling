@@ -30,7 +30,7 @@ class Economy(commands.Cog):
         else:
             return
     
-    @commands.command()
+    @commands.command(aliases=['bal', 'profile'])
     async def balance(self, ctx, member: discord.Member=None):
         if member is None and ctx.message.reference:
             msg = await ctx.channel.fetch_message(id=ctx.message.reference.message_id)
@@ -43,6 +43,9 @@ class Economy(commands.Cog):
             wallet, bank = stats['wallet'], stats['bank']
             embed = balance_embed(member, wallet, bank)
             await ctx.send(embed=embed)
+        else:
+            if member == ctx.author:
+                await ctx.send(f"**{member.name}** new to this? consider `;start` to get started")
 
 
 def setup(bot):
