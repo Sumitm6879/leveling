@@ -152,7 +152,7 @@ class Economy(commands.Cog):
             member = msg.author
         if member is None:
             member = ctx.author
-        beg = self.client.get_command('beg')
+        beg = self.bot.get_command('beg')
         if beg.is_on_cooldown(member):
             minutes, seconds= divmod(int(beg.get_cooldown_retry_after(member)), 60) 
             beg_emoji, beg_time = "🕐", f"{minutes}m {seconds}s"
