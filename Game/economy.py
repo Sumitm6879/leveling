@@ -161,7 +161,7 @@ class Economy(commands.Cog):
             beg_emoji, beg_time = "✅", f""
         
         em = cooldown_embed(ctx, beg_emoji, beg_time)
-        await ctx.send(embed=embed)
+        await ctx.send(embed=em)
 
         
 
