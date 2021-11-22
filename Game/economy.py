@@ -144,6 +144,25 @@ class Economy(commands.Cog):
             minute, seconds = divmod(int(error.retry_after), 60)
             em = discord.Embed(title=f"Cooldown!",description=f"Try again in **{minute}m {seconds}s**.", color=embed_color)
             await ctx.send(embed=em)
+    
+    @commands.command()
+    async def cooldown(self, ctx, member:discord.Member=None):
+        if member is None and ctx.message.reference:
+            msg = await ctx.channel.fetch_message(id=ctx.message.reference.message_id)
+            member = msg.author
+        if member is None:
+            member = ctx.author
+        beg = self.client.get_command('beg')
+        if beg.is_on_cooldown(member):
+            minutes, seconds= divmod(int(beg.get_cooldown_retry_after(member)), 60) 
+            beg_emoji, beg_time = "🕐", f"{minutes}m {seconds}s"
+        else:
+            beg_emoji, beg_time = "✅", f""
+        
+        em = cooldown_embed(member, beg_emoji, beg_time)
+        await ctx.send(embed=embed)
+
+        
 
 
 def setup(bot):
@@ -188,3 +207,12 @@ def convert_str_to_number(no):
 def new_to_this(ctx):
     tada = f"**{ctx.author.name}** new to this? consider `;start` to get started"
     return tada
+
+def cooldown_embed(member, beg_emoji, beg_time):
+    embed = discord.Embed(
+        title="Commands",
+        description=f"{emoji} **|** `Beg` (**{beg_time}**)",
+        color= embed_color,
+        timestamp = datetime.datetime.utcnow())
+    embed.set_author(name=member.name, icon_url=member.avatar_url)
+    return embed

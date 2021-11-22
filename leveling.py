@@ -317,6 +317,8 @@ async def on_command_error(ctx, error):
         await ctx.send(f"**ERROR 404**\n> {error}")
     elif isinstance(error, BadArgument):
         await ctx.send(f"**ERROR 400 BAD REQUEST**\n> {error}")
+    elif isinstance(error, commands.CommandOnCooldown):
+        pass
     else:
         raise error
 
