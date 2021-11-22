@@ -212,7 +212,7 @@ def new_to_this(ctx):
 def cooldown_embed(ctx, beg_emoji, beg_time):
     embed = discord.Embed(
         title="Commands",
-        description=f"{emoji} **|** `Beg` (**{beg_time}**)",
+        description=f"{beg_emoji} **|** `Beg` (**{beg_time}**)",
         color= embed_color,
         timestamp = datetime.datetime.utcnow())
     embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
