@@ -1,4 +1,5 @@
 import datetime
+from os import name
 from typing import Text
 import discord
 from discord.ext import commands
@@ -60,6 +61,6 @@ def balance_embed(member, wallet, bank):
         description = "**Wallet:** {wallet}\n**Bank:** {bank}",
         color = 0x2a72f7,
         timestamp = datetime.datetime.utcnow())
-    embed.set_author(text=f"{member.name}", url=member.avatar_url)
+    embed.set_author(name=f"{member.name}", url=member.avatar_url)
     embed.set_thumbnail(url=member.avatar_ur)
     return embed
