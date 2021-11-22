@@ -1,7 +1,6 @@
 import datetime
-from os import name
-from typing import Text
 import discord
+import random
 from discord.ext import commands
 from pymongo import MongoClient
 
@@ -11,6 +10,13 @@ cluster = MongoClient(
 )
 leveling = cluster['MysticBot']['levels']
 profile = cluster['Economy']['economy-profile']
+
+#beg choice
+failed_beg_choice = [
+    "Lmao you didn't find anyone **{ctx.author.name}**",
+    "**{ctx.author.name}** you broke? badluck!",
+    "**{ctx.author.name}** No Begging in the server you wanna get mute?",
+    "**{ctx.author.name}** You looked around but there are no people around"]
 
 class Economy(commands.Cog):
     def __init__(self, bot):
@@ -52,6 +58,74 @@ class Economy(commands.Cog):
                 await ctx.send(f"**{member.name}** has never played")
 
 
+    @commands.command()
+    async def deposit(self, ctx, money:str):
+        search = player_search(ctx.author.id)
+        if search:
+            money = convert_str_to_number(money)
+            if isinstance(money, int):
+                stats = profile.find_one({"_id": ctx.author.id})
+                old_wallet = stats['wallet']
+                if money <= old_wallet:
+                    new_wallet = old_wallet-money
+                    new_bank = stats['bank'] + money
+                    profile.update_one({"_id": ctx.author.id}, {"$set":{"wallet": new_wallet}})
+                    profile.update_one({"_id": ctx.author.id}, {"$set":{"bank": new_bank}})
+                    await ctx.send(f"**{ctx.author.name}** deposited 🪙 **{money}**")
+                else:
+                    return await ctx.send("Check your wallet **{ctx.author.name}** Lmao!")
+            else:
+                return await ctx.send(f"**{ctx.author.name}** please enter a valid amount!")
+        else:
+            await ctx.send(f"**{ctx.author.name}** new to this? consider `;start` to get started")
+
+            
+    @commands.command()
+    async def withdraw(self, ctx, money:str):
+        search = player_search(ctx.author.id)
+        if search:
+            money = convert_str_to_number(money)
+            if isinstance(money, int):
+                stats = profile.find_one({"_id": ctx.author.id})
+                old_bank = stats['bank']
+                if money <= old_bank:
+                    new_wallet = stats['wallet'] + money
+                    new_bank = stats['bank'] - money
+                    profile.update_one({"_id": ctx.author.id}, {"$set":{"wallet": new_wallet}})
+                    profile.update_one({"_id": ctx.author.id}, {"$set":{"bank": new_bank}})
+                    await ctx.send(f"**{ctx.author.name}** 🪙 **{money}** withdrawn")
+                else:
+                    return await ctx.send("**{ctx.author.name}** duh! check your bank and try again")
+            else:
+                return await ctx.send(f"**{ctx.author.name}** please enter a valid amount!")
+        else:
+            await ctx.send(f"**{ctx.author.name}** new to this? consider `;start` to get started")
+        
+
+    @commands.command()
+    async def beg(self, ctx):
+        search = player_search(ctx.author.id)
+        if search:
+            chance1 = random.randint(1,11)
+            if chance1 in range(3,8):
+                index = leveling.find_one({"_id": ctx.author.id})
+                stats = profile.find_one({"_id": ctx.author.id})
+                if index is None:
+                    failed_sentence = random.choice(failed_beg_choice)
+                    return await ctx.send(f"{failed_sentence}")
+                xp = index['xp']
+                level = calculate_level(xp)
+                beg_money = level*(random.randint(1,3))+random.randint(45,101)
+                new_wallet = stats['wallet'] + beg_money
+                profile.update_one({"_id": ctx.author.id}, {"$set":{"wallet":new_wallet}})
+                await ctx.send(f"**{ctx.author.name}** you earned 🪙**{new_wallet}**")
+            else:
+                failed_sentence = random.choice(failed_beg_choice)
+                await ctx.send(f"{failed_sentence}")
+        else:
+            await ctx.send(f"**{ctx.author.name}** new to this? consider `;start` to get started")
+
+
 def setup(bot):
     bot.add_cog(Economy(bot))
 
@@ -63,11 +137,30 @@ def player_search(player_id):
         return False
 
 def balance_embed(member, wallet, bank):
+    wallet, bank= "{:,}".format(wallet), "{:,}".format(bank)
     embed = discord.Embed(
         title = "Balance",
-        description = f"**Wallet:** {wallet}\n**Bank:** {bank}",
+        description = f"🪙 **Wallet:** {wallet}\n🏦 **Bank:** {bank}",
         color = 0x2a72f7,
         timestamp = datetime.datetime.utcnow())
     embed.set_author(name=f"{member.name}", url=member.avatar_url)
     embed.set_thumbnail(url=member.avatar_url)
     return embed
+
+def calculate_level(xp):
+    lvl = 0
+    while True:
+        if xp < ((20 * (lvl ** 2)) + (20 * lvl)):
+            break
+        lvl += 1
+    return lvl
+
+def convert_str_to_number(no):
+    total_stars = 0
+    num_map = {'K':1000, 'M':1000000, 'B':1000000000, 'T':1000000000000}
+    if no.isdigit():
+        total_stars = int(no)
+    else:
+        if len(no) > 1:
+            total_stars = float(no[:-1]) * num_map.get(no[-1].upper(), 1)
+    return int(total_stars)
