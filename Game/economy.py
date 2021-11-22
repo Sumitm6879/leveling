@@ -1,3 +1,5 @@
+import datetime
+from typing import Text
 import discord
 from discord.ext import commands
 from pymongo import MonoClient
@@ -28,10 +30,18 @@ class Economy(commands.Cog):
             return
     
     @commands.command()
-    async def balance(self, ctx):
-        search = player_search(ctx.author.id)
+    async def balance(self, ctx, member: discord.Member=None):
+        if member is None and ctx.message.reference:
+            msg = await ctx.channel.fetch_message(id=ctx.message.reference.message_id)
+            member = msg.author
+        if member is None:
+            member = ctx.author
+        search = player_search(member.id)
         if search:
-            pass
+            stats = profile.find_one({"_id": member.id})
+            wallet, bank = stats['wallet'], stats['bank']
+            embed = balance_embed(member, wallet, bank)
+            await ctx.send(embed=embed)
 
 
 def setup(bot):
@@ -43,3 +53,13 @@ def player_search(player_id):
         return True
     else:
         return False
+
+def balance_embed(member, wallet, bank):
+    embed = discord.Embed(
+        title = "Balance",
+        description = "**Wallet:** {wallet}\n**Bank:** {bank}",
+        color = 0x2a72f7,
+        timestamp = datetime.datetime.utcnow())
+    embed.set_author(text=f"{member.name}", url=member.avatar_url)
+    embed.set_thumbnail(url=member.avatar_ur)
+    return embed

@@ -7,6 +7,7 @@ from discord.ext import commands
 from easy_pil import Editor
 from PIL import Image, ImageDraw, ImageFont
 import datetime
+from Game import economy
 from discord.ext.commands import CommandNotFound, MemberNotFound, MissingPermissions, MissingRequiredArgument, \
     BadArgument, CommandOnCooldown
 from pymongo import MongoClient
@@ -29,7 +30,7 @@ bot = commands.Bot(command_prefix=';',
                    intents=intents)
 slash = SlashCommand(bot, sync_commands=True)
 bot.remove_command('help')
-cogs = [mleveling, rank_card]
+cogs = [mleveling, rank_card, economy]
 
 for i in range(len(cogs)):
     cogs[i].setup(bot)
