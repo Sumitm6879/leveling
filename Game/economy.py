@@ -185,7 +185,7 @@ class Economy(commands.Cog):
                 if chance1 == chance2: # win situation
                     chance3 = random.randint(0,5)
                     if chance3 == (chance2 + chance1):
-                        extra_money = level*random.randint(100,200)+money
+                        extra_money = level*random.randint(5,10)+money
                     else:
                         extra_money = 0
                     win_money = money+extra_money
