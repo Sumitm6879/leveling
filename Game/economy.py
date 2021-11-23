@@ -123,7 +123,7 @@ class Economy(commands.Cog):
         search = player_search(ctx.author.id)
         if search:
             chance1 = random.randint(1,11)
-            if chance1 in range(3,8):
+            if chance1 in range(2,9):
                 index = leveling.find_one({"_id": ctx.author.id})
                 stats = profile.find_one({"_id": ctx.author.id})
                 if index is None:
@@ -174,7 +174,7 @@ class Economy(commands.Cog):
             else:
                 money = convert_str_to_number(money)
             chance1 = random.randint(0,2)
-            chance2 = random.randint(0,3)
+            chance2 = random.randint(0,2)
             index = leveling.find_one({"_id": ctx.author.id})
             if index is None:
                 return await ctx.send("You don't have any level lmao you can't run this command!")
@@ -184,7 +184,7 @@ class Economy(commands.Cog):
             if money <= old_wallet:
                 if chance1 == chance2: # win situation
                     chance3 = random.randint(0,5)
-                    if chance3 == chance2:
+                    if chance3 == (chance2 + chance1):
                         extra_money = level*random.randint(100,200)+money
                     else:
                         extra_money = 0
