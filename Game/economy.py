@@ -277,5 +277,5 @@ def get_emoji():
         emojis_l.append(random_emoji)
         if len(emojis_l) == 5:
             break
-    emojis = " ".join(emojis_l)
+    emojis = "".join(emojis_l)
     return emojis
