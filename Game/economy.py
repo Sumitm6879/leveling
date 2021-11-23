@@ -137,6 +137,7 @@ class Economy(commands.Cog):
         else:
             welcm = new_to_this(ctx)
             await ctx.send(welcm)
+            beg.reset_cooldown(ctx)
 
     @beg.error
     async def beg_error(self, ctx, error):
@@ -145,29 +146,24 @@ class Economy(commands.Cog):
             em = discord.Embed(title=f"Cooldown!",description=f"Try again in **{minute}m {seconds}s**.", color=embed_color)
             await ctx.send(embed=em)
     
-    @commands.command()
-    async def cooldown(self, ctx, member:discord.Member=None):
-        # if member is None and ctx.message.reference:
-        #     msg = await ctx.channel.fetch_message(id=ctx.message.reference.message_id)
-        #     member = msg.author
-        # if member is None:
-        #     msg = ctx.message
-        #     member = ctx.author
-        beg = self.bot.get_command('beg')
-        if beg.is_on_cooldown(ctx):
-            minutes, seconds= divmod(int(beg.get_cooldown_retry_after(ctx)), 60) 
-            beg_emoji, beg_time = "🕐", f"{minutes}m {seconds}s"
-        else:
-            beg_emoji, beg_time = "✅", f"Ready"
+
+    @commands.command(aliases=['cd'])
+    async def cooldown(self, ctx):
+        beg = self.bot.get_command('beg') # get command
+        beg_cd = beg_cooldown(ctx, beg) # get command CD
         
-        em = cooldown_embed(ctx, beg_emoji, beg_time)
-        await ctx.send(embed=em)
+        embed = discord.Embed(
+            description = f"{beg_cd}",
+            color = embed_color)
+        embed.set_author(name=f"{ctx.author.name}'s cooldown", icon_url=ctx.author.avatar_url)
+        await ctx.send(embed=embed)
 
         
 
 
 def setup(bot):
     bot.add_cog(Economy(bot))
+
 
 def player_search(player_id):
     player = profile.find_one({"_id": player_id})
@@ -176,6 +172,7 @@ def player_search(player_id):
     else:
         return False
 
+
 def balance_embed(member, wallet, bank):
     wallet, bank= "{:,}".format(wallet), "{:,}".format(bank)
     embed = discord.Embed(
@@ -183,9 +180,10 @@ def balance_embed(member, wallet, bank):
         description = f"🪙 **Wallet:** {wallet}\n🏦 **Bank:** {bank}",
         color = embed_color,
         timestamp = datetime.datetime.utcnow())
-    embed.set_author(name=f"{member.name}", url=member.avatar_url)
+    embed.set_author(name=f"{member.name}", icon_url=member.avatar_url)
     embed.set_thumbnail(url=member.avatar_url)
     return embed
+
 
 def calculate_level(xp):
     lvl = 0
@@ -194,6 +192,7 @@ def calculate_level(xp):
             break
         lvl += 1
     return lvl
+
 
 def convert_str_to_number(no):
     total_stars = 0
@@ -205,15 +204,16 @@ def convert_str_to_number(no):
             total_stars = float(no[:-1]) * num_map.get(no[-1].upper(), 1)
     return int(total_stars)
 
+
 def new_to_this(ctx):
     tada = f"**{ctx.author.name}** new to this? consider `;start` to get started"
     return tada
 
-def cooldown_embed(ctx, beg_emoji, beg_time):
-    embed = discord.Embed(
-        title="Commands",
-        description=f"{beg_emoji} ~-~ `Beg` (**{beg_time}**)",
-        color= embed_color,
-        timestamp = datetime.datetime.utcnow())
-    embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
-    return embed
+
+def beg_cooldown(ctx, beg):
+    if beg.is_on_cooldown(ctx):
+        minutes, seconds= divmod(int(beg.get_cooldown_retry_after(ctx)), 60) 
+        time = f"🕐 ~-~ `Beg` (**{minutes}m {seconds}s**)"
+    else:
+        time = f"✅ ~-~ `Beg` "
+    return time
