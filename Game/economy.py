@@ -183,7 +183,7 @@ class Economy(commands.Cog):
             old_wallet = stats['wallet']
             if money <= old_wallet:
                 if chance1 == chance2: # win situation
-                    chance3 = random.randint(0,5)
+                    chance3 = random.randint(0,8)
                     if chance3 == (chance2 + chance1):
                         extra_money = level*random.randint(5,10)+money
                     else:
