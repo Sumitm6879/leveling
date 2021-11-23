@@ -209,7 +209,7 @@ class Economy(commands.Cog):
             tada = new_to_this(ctx)
             await ctx.send("")
         
-    @slots.error()
+    @slots.error
     async def slots_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(description=f"**{ctx.author.name}** Don't spam wait atleast 1 second before typing command", color=embed_color)
