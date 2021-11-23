@@ -174,7 +174,7 @@ class Economy(commands.Cog):
             else:
                 money = convert_str_to_number(money)
             chance1 = random.randint(0,2)
-            chnace2 = random.randint(0,5)
+            chance2 = random.randint(0,5)
             index = leveling.find_one({"_id": ctx.author.id})
             if index is None:
                 return await ctx.send("You don't have any level lmao you can't run this command!")
