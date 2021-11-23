@@ -204,7 +204,7 @@ class Economy(commands.Cog):
                 await ctx.send(embed=embed)
 
             else:
-                return await ctx.send("**{ctx.author.name}** you don't have that much coins!")
+                return await ctx.send(f"**{ctx.author.name}** you don't have that much coins!")
 
 
         else:
