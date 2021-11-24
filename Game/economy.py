@@ -181,6 +181,8 @@ class Economy(commands.Cog):
             xp = index['xp']
             level = calculate_level(xp)
             old_wallet = stats['wallet']
+            if old_wallet == 0:
+                return await ctx.send("You don't have any money to slots")
             if money <= old_wallet:
                 if chance1 == chance2: # win situation
                     chance3 = random.randint(0,8)
