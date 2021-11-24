@@ -182,7 +182,8 @@ class Economy(commands.Cog):
             level = calculate_level(xp)
             old_wallet = stats['wallet']
             if old_wallet == 0:
-                return await ctx.send("You don't have any money to slots")
+                statements = ['you can only slots 1 or more coins', "you don't have any money to slots", "check you wallet lmao"]
+                return await ctx.send(f"**{ctx.author.name}** " + "{0}".format(random.choice(statements)))
             if money <= old_wallet:
                 if chance1 == chance2: # win situation
                     chance3 = random.randint(0,8)
