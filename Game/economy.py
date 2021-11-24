@@ -139,9 +139,9 @@ class Economy(commands.Cog):
                 failed_sentence = random.choice(failed_beg_choice)
                 await ctx.send(f"**{ctx.author.name}** {failed_sentence}")
         else:
+            beg.reset_cooldown(ctx)
             welcm = new_to_this(ctx)
             await ctx.send(welcm)
-            beg.reset_cooldown(ctx)
 
     @beg.error
     async def beg_error(self, ctx, error):
