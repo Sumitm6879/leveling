@@ -131,7 +131,7 @@ class Economy(commands.Cog):
                     return await ctx.send(f"{failed_sentence}")
                 xp = index['xp']
                 level = calculate_level(xp)
-                beg_money = level*(random.randint(1,3))+random.randint(45,101)
+                beg_money = level*(random.randint(1,3))+random.randint(10,level)
                 new_wallet = stats['wallet'] + beg_money
                 profile.update_one({"_id": ctx.author.id}, {"$set":{"wallet":new_wallet}})
                 await ctx.send(f"**{ctx.author.name}** you earned 🪙 **{beg_money}**")
