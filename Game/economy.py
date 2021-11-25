@@ -204,10 +204,14 @@ class Economy(commands.Cog):
             return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
         
         if search:
-            index = profile.find_one({"_id": ctx.author.id})
+            stats = profile.find_one({"_id": ctx.author.id})
+            index = leveling.find_one({"_id": ctx.author.id})
             xp = index['xp']
             level = calculate_level(xp)
             roam_money = (level*random.randint(10,15)+random.randint((level//10), level))*globalMultiplier
+            old_wallet = stats['wallet']
+            new_wallet = old_wallet + roam_money
+            profile.update_one({"_id": ctx.author.id}, {"$set": {"wallet": new_wallet}})
             roamActionChoice = random.choice(roam_choices)
             await ctx.send(f"**{ctx.author.name}** {roamActionChoice}\n**{ctx.author.name}** you get {coin_emoji} {roam_money}")
         else:
@@ -383,7 +387,7 @@ def get_earning_cd(ctx, command, x):
         time = f"🕐 ~-~ `{x.capitalize()}` (**{minutes}m {seconds}s**)"
     else:
         time = f"✅ ~-~ `{x.capitalize()}`"
-        
+
     return time
 
 
