@@ -381,8 +381,10 @@ def get_earning_cd(ctx, command, x):
     if command.is_on_cooldown(ctx):
         minutes, seconds= divmod(int(command.get_cooldown_retry_after(ctx)), 60) 
         time = f"🕐 ~-~ `{x.capitalize()}` (**{minutes}m {seconds}s**)"
-        print(time)
-        return time
+    else:
+        time = f"✅ ~-~ `{x.capitalize()}`"
+        
+    return time
 
 
 def get_emoji():
