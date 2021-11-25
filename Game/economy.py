@@ -70,7 +70,7 @@ class Economy(commands.Cog):
 
     @commands.command(aliases=['bal', 'profile'])
     async def balance(self, ctx, member: discord.Member=None):
-        if member.bot and member != None:
+        if member != None and member.bot:
             return await ctx.send(f"This does not works for bots {ctx.author.mention}")
         if member is None and ctx.message.reference:
             msg = await ctx.channel.fetch_message(id=ctx.message.reference.message_id)
