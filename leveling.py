@@ -27,7 +27,8 @@ print("DB CONNECTED")
 
 intents = discord.Intents().all()
 bot = commands.Bot(command_prefix=';',
-                   intents=intents)
+                   intents=intents,
+                   case_insensitive=True)
 slash = SlashCommand(bot, sync_commands=True)
 bot.remove_command('help')
 cogs = [mleveling, rank_card, economy, ecomod]
@@ -268,7 +269,7 @@ async def lvl(ctx, member: discord.Member = None):
         await ctx.send(f"**{member.name}'s** level", file=file)
     
     
-@bot.command(aliases=['h', 'H', 'HELP', 'Help', 'HElp'])
+@bot.command(aliases=['h'])
 async def help(ctx, arg: str = None):
     if arg is None:
         embed = discord.Embed(

@@ -79,7 +79,7 @@ class Leveling(commands.Cog):
                 else:
                     return
 
-    @commands.command(aliases=['lb', 'top', 'TOP', 'LB', 'Lb', 'lB', 'Top', 'TOp', 'tOP', 'ToP', 'tOp', 'toP'])
+    @commands.command(aliases=['lb', 'top'])
     async def leaderboard(self, ctx, page: int = None):
         if page is None or page == 1:
             ranking = leveling.find().sort('xp', -1)
@@ -261,7 +261,7 @@ class Leveling(commands.Cog):
                 leveling.update_one({"_id": member.id}, {"$set": {'xp': xp}})
                 await ctx.send(f"Removed **{amount}**xp from {member.mention}")
 
-    @commands.command(aliases=['Set'])
+    @commands.command()
     @commands.has_permissions(kick_members=True)
     async def set(self, ctx, g: str, member: discord.Member = None, level: int = None):
         if Member is None and ctx.message.reference:

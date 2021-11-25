@@ -19,9 +19,7 @@ class rank_card(commands.Cog):
     async def on_ready(self):
         print("rank cards Ready!")
 
-    @commands.command(
-        aliases=['lvl', 'LVL', 'Rank', 'Lvl', 'RANK', 'LvL', 'lVL', 'lvL', 'RAnk', 'rANk', 'raNK', 'RanK', 'RANk',
-                 'rANK', 'level', 'LEVEL', 'Level', 'LeVeL', 'LEvel', 'LEVel', 'LEVEl', 'lEVEL', 'leVEL', 'levEL', 'leveL'])
+    @commands.command(aliases=['lvl', 'level'])
     async def rank(self, ctx, member: discord.Member = None):
         if member is None and ctx.message.reference:
             msg = await ctx.channel.fetch_message(id=ctx.message.reference.message_id)
@@ -221,7 +219,7 @@ class rank_card(commands.Cog):
             file = discord.File(fp=new_background.image_bytes, filename='member_lvl.png')
             await ctx.send(file=file)
 
-    @commands.command(aliases=['bg', 'BACKGROUND', 'Background', 'BG', 'Bg', 'bG'])
+    @commands.command(aliases=['bg'])
     async def background(self, ctx, bg: str = None):
         user = bg_user.find_one({"_id": ctx.author.id})
         if bg is None:
