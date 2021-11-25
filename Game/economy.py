@@ -228,9 +228,11 @@ class Economy(commands.Cog):
             earning_commands_name = ['beg', 'roam']
             earnings_cd = ""
             for x in earning_commands_name:
-                command = self.bot.get_command(f'{x}')
-                command_cd = get_earning_cd(ctx, command, x)
+                command__earn_CD = self.bot.get_command(x)
+                command_cd = get_earning_cd(ctx, command_earn_CD, x)
+                print(command_cd)
                 earnings_cd += f"{command_cd}\n"
+                print(earnings_cd)
             
             embed = discord.Embed( 
                 description = f"{coin_emoji} **Earnings**\n{earnings_cd}",
@@ -379,6 +381,7 @@ def get_earning_cd(ctx, command, x):
     if command.is_on_cooldown(ctx):
         minutes, seconds= divmod(int(command.get_cooldown_retry_after(ctx)), 60) 
         time = f"🕐 ~-~ `{x.capitalize()}` (**{minutes}m {seconds}s**)"
+        print(time)
         return time
 
 
