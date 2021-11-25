@@ -377,7 +377,7 @@ def beg_cooldown(ctx, beg):
 
 def get_earning_cd(ctx, command, x):
     if command.is_on_cooldown(ctx):
-        minutes, seconds= divmod(int(beg.get_cooldown_retry_after(ctx)), 60) 
+        minutes, seconds= divmod(int(command.get_cooldown_retry_after(ctx)), 60) 
         time = f"🕐 ~-~ `{x.capitalize()}` (**{minutes}m {seconds}s**)"
         return time
 
