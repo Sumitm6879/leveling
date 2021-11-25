@@ -11,7 +11,7 @@ cluster = MongoClient(
 leveling = cluster['MysticBot']['levels']
 profile = cluster['Economy']['economy-profile']
 imoc = cluster['Economy']['economy-in_middle_of_command']
-global_multi = cluster['Economy']['economy=GLOBAL']
+global_multi = cluster['Economy']['economy-GLOBAL']
 #Globals specification
 gM = global_multi.find_one({"_id": "globalMulti"})
 globalMultilplier = gM['globalmultiplier']
