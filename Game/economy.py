@@ -228,7 +228,7 @@ class Economy(commands.Cog):
             earning_commands_name = ['beg', 'roam']
             earnings_cd = ""
             for x in earning_commands_name:
-                command__earn_CD = self.bot.get_command(x)
+                command_earn_CD = self.bot.get_command(x)
                 command_cd = get_earning_cd(ctx, command_earn_CD, x)
                 print(command_cd)
                 earnings_cd += f"{command_cd}\n"
