@@ -324,4 +324,13 @@ async def on_command_error(ctx, error):
         raise error
 
 
+@bot.event
+async def on_member_remove(member):
+    try:
+        leveling.delete_one({"_id": member.id})
+    except:
+        pass
+
+
+
 bot.run('ODc0MjcyOTUxMDQ0ODI1MTU4.YREkIg.GFJRkzHCxBvHgUJvJjZysvZikKk')
