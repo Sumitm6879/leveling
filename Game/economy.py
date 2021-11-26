@@ -531,5 +531,7 @@ def get_user_rank(ctx, level):
         rank = ctx.guild.get_role(796354367711870997)
     elif level >= 200:
         rank = ctx.guild.get_role(794896709380866098)
+    else:
+        rank = None
 
     return rank
