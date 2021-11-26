@@ -50,7 +50,7 @@ async def on_ready():
 async def member_cleanup():
     members = leveling.find({})
     for x in members:
-        guild = bot.fetch_guild(705513318747602944)
+        guild = bot.get_guild(705513318747602944)
         member_id = x['_id']
         member_search = guild.get_member(x['id'])
         if member_search is None:
