@@ -252,6 +252,7 @@ class Economy(commands.Cog):
         if imoc_check is False:
             return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
         if search:
+            rewards_Cd = ""
             hr_cd = get_hourly_cd(ctx.author.id)
             rewards_Cd += f"{hr_cd}\n"
 
