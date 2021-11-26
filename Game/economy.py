@@ -12,6 +12,9 @@ leveling = cluster['MysticBot']['levels']
 profile = cluster['Economy']['economy-profile']
 imoc = cluster['Economy']['economy-in_middle_of_command']
 global_multi = cluster['Economy']['economy-GLOBAL']
+hourly_cd = cluster['Economy']['economy-hourly_cd'] 
+daily_cd = cluster
+
 #Globals specification
 gM = global_multi.find_one({"_id": "globalMulti"})
 globalMultiplier = gM['globalmultiplier']
@@ -32,7 +35,7 @@ failed_beg_choice = [
 #roam choices 
 roam_choices = [
     "while roaming you found a wallet droped on the street",
-    "you hleped police in catching a thief",
+    "you helped police in catching a thief",
     "you stole money from a kid! very bad",
     "a rich man walks up to you and was very pleased to talk to you",
     "you helped a thief escape!",
@@ -40,7 +43,9 @@ roam_choices = [
     "a drunk man was alseep on the bench **||you robed him||**",
     "you got into a street fight, You won!",
     "a blind man has lost his stick you helped him\nit was a tik tok video",
-    "you feel too lazy to walk so you returned home but you found your lost wallet in you pants ||it was never lost||"
+    "you helped clean the cleaner to pick up trash lying on the street",
+    "you feel too lazy to walk so you returned home but you found your lost wallet in you pants ||it was never lost||",
+    "while walking around the garden you found your lost money!"
 ]
 
 # gamble emojis
@@ -54,7 +59,8 @@ class Economy(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Economy Ready!")
-    
+        cooldowns_hourly = cooldown_cd.find().sort('hourly_cd', -1)
+        cooldowns_daily = cooldown_cd.find().sort('daily_cd', -1)
 
     @commands.command()
     async def start(self, ctx):
@@ -191,12 +197,13 @@ class Economy(commands.Cog):
     async def beg_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             minute, seconds = divmod(int(error.retry_after), 60)
-            em = discord.Embed(title=f"Cooldown!",description=f"Try again in **{minute}m {seconds}s**.", color=embed_color)
+            em = discord.Embed(title=f"Try again in **{minute}m {seconds}s**.", description="", color=embed_color)
+            em.set_author(name=f"{ctx.author.name}'s cooldown")
             await ctx.send(embed=em)
     
 
     @commands.command()
-    @commands.cooldown(1, 300, commands.BucketType.user)
+    @commands.cooldown(1, 600, commands.BucketType.user)
     async def roam(self, ctx):
         search = player_search(ctx.author.id)
         imoc_check = find_imoc(ctx.author.id)
@@ -208,18 +215,25 @@ class Economy(commands.Cog):
             index = leveling.find_one({"_id": ctx.author.id})
             xp = index['xp']
             level = calculate_level(xp)
-            roam_money = (level*random.randint(10,15)+random.randint((level//10), level))*globalMultiplier
+            roam_money = (level*random.randint(8,13)+random.randint((level//10), level))*globalMultiplier
             old_wallet = stats['wallet']
             new_wallet = old_wallet + roam_money
             profile.update_one({"_id": ctx.author.id}, {"$set": {"wallet": new_wallet}})
             roamActionChoice = random.choice(roam_choices)
-            await ctx.send(f"**{ctx.author.name}** {roamActionChoice}\n**{ctx.author.name}** you get {coin_emoji} {roam_money}")
+            await ctx.send(f"**{ctx.author.name}** {roamActionChoice}\n**{ctx.author.name}** you get {coin_emoji} **{roam_money}**")
         else:
             command = self.bot.get_command('roam')
             command.reset_cooldown(ctx)
             welcm = new_to_this(ctx)
             await ctx.send(welcm)
 
+    @roam.error
+    async def roam_error(self, ctx, error):
+        if isinstance(error, commands.CommandOnCooldown):
+            minute, seconds = divmod(int(error.retry_after), 60)
+            em = discord.Embed(title=f"Try again in **{minute}m {seconds}s**.", description="", color=embed_color)
+            em.set_author(name=f"{ctx.author.name}'s cooldown")
+            await ctx.send(embed=em)
 
 
     @commands.command(aliases=['cd'])
@@ -229,17 +243,18 @@ class Economy(commands.Cog):
         if imoc_check is False:
             return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
         if search:
+            hr_cd = get_hourly_cd(ctx.author.id)
+            rewards_Cd += f"{hr_cd}\n"
+            
             earning_commands_name = ['beg', 'roam']
             earnings_cd = ""
             for x in earning_commands_name:
                 command_earn_CD = self.bot.get_command(x)
                 command_cd = get_earning_cd(ctx, command_earn_CD, x)
-                print(command_cd)
                 earnings_cd += f"{command_cd}\n"
-                print(earnings_cd)
-            
+
             embed = discord.Embed( 
-                description = f"{coin_emoji} **Earnings**\n{earnings_cd}",
+                description = f"🎁 **Rewards** {rewards_Cd}{coin_emoji} **Earnings**\n{earnings_cd}",
                 color = embed_color)
             embed.set_author(name=f"{ctx.author.name}'s cooldown", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
@@ -307,6 +322,46 @@ class Economy(commands.Cog):
             embed = discord.Embed(description=f"**{ctx.author.name}** Don't spam wait atleast 1 second before typing command", color=embed_color)
             embed.set_author(name=f"{ctx.author.name}", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
+    
+
+    @commands.command(aliases=['hr'])
+    async def hourly(self, ctx):
+        stats = profile.find_one({"_id": ctx.author.id})
+        cooldown_hr = hourly_cd.find_one({"_id": ctx.author.id})
+        imoc_check = find_imoc(ctx.author.id)
+        if imoc_check is False:
+            return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
+
+        if stats:
+            if cooldown_hr is None:
+                index = leveling.find_one({"_id": ctx.author.id})
+                xp = index['xp']
+                level = calculate_level(xp)
+                hourly_rewards = get_hourly_rewards(level)
+                hourly_rank = get_user_rank(ctx, level)
+                embed = discord.Embed(
+                    title="claimed hourly reward",
+                    description=f"Hourly reward for {hourl_rank.mention}\n{coin_emoji} {hourly_rewards}", 
+                    color=embed_color)
+                embed.set_author(name=f"{ctx.author.name}", icon_url=ctx.author.avatar_url)
+
+                old_wallet = stats['wallet']
+                new_wallet = old_wallet + hourly_rewards
+                profile.update_one({"_id": ctx.author.id}, {"$set": {"wallet": new_wallet}})
+
+                hr_cd = datetime.datetime.utcnow() + datetime.timedelta(hours=1) # setting hourly cd
+                date = datetime.datetime.utcnow()
+                hourly_cd.insert_one({"_id": ctx.author.id, "hr_cd": hr_cd, "date": date})
+
+                await ctx.send(embed=embed)
+
+            else:
+                end_cd = cooldown_hr['hr_cd']
+                hr_cd = end_cd - datetime.datetime.utcnow()
+                minutes, seconds = divmod(int(hr_cd.total_seconds()), 60)
+                em = discord.Embed(title=f"Try again in **{minute}m {seconds}s**.", description="", color=embed_color)
+                em.set_author(name=f"{ctx.author.name}'s cooldown")
+                await ctx.send(embed=em)
 
 
 def setup(bot):
@@ -387,7 +442,6 @@ def get_earning_cd(ctx, command, x):
         time = f"🕐 ~-~ `{x.capitalize()}` (**{minutes}m {seconds}s**)"
     else:
         time = f"✅ ~-~ `{x.capitalize()}`"
-
     return time
 
 
@@ -414,3 +468,57 @@ def slots_calulate(emojis):
         return True
     else:
         return False
+
+
+def get_hourly_cd(player_id):
+    command_cd = hourly_cd.find_one({"_id": player_id})
+    if command_cd != None:
+        end_cd = command_cd['hr_cd']
+        hr_cd = end_cd - datetime.datetime.utcnow()
+        minutes, seconds = divmod(int(hr_cd.total_seconds()), 60)
+        time = f"🕐 ~-~ `Hourly` (**{minutes}m {seconds}s**)"
+    else:
+        time = f"✅ ~-~ `Hourly` "
+    return time
+
+
+
+def get_hourly_rewards(level):
+    if level in range(1,11):
+        reward = 100
+    elif level in range(11,21):
+        reward = 200
+    elif level in range(21,41):
+        reward = 400
+    elif level in range(41,81):
+        reward = 800
+    elif level in range(81, 121):
+        reward = 1200
+    elif level in range(121, 181):
+        reward = 2000
+    elif level >= 181:
+        reward = 5000
+    return reward
+
+def get_user_rank(ctx, level):
+    if level in range(1, 3):
+        rank = ctx.guild.get_role(794886884497031168)
+    if level in range(5,10):
+        rank = ctx.guild.get_role(794896587943575563)
+    elif level in range(10,20):
+        rank = ctx.guild.get_role(794896588623052830)
+    elif level in range(20,40):
+        rank = ctx.guild.get_role(794896601856475166)
+    elif level in range(40,80):
+        rank = ctx.guild.get_role(794896602694156318)
+    elif level in range(80, 120):
+        rank = ctx.guild.get_role(794896707971973132)
+    elif level in range(120, 150):
+        rank = ctx.guild.get_role(794896709238784011)
+    elif level in range(150, 180):
+        rank = ctx.guild.get_role(796353896478015549)
+    elif level in range(180, 200):
+        rank = ctx.guild.get_role(796354367711870997)
+    elif level > 200:
+        rank = ctx.guild.get_role(794896709380866098)
+    return rank
