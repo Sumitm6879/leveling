@@ -1,7 +1,7 @@
 import datetime
 import discord
 import random
-from discord.ext import commands
+from discord.ext import commands, tasks
 from pymongo import MongoClient
 
 P = 'sumitm6879sm'
@@ -59,8 +59,17 @@ class Economy(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Economy Ready!")
-        cooldowns_hourly = cooldown_cd.find().sort('hourly_cd', -1)
-        cooldowns_daily = cooldown_cd.find().sort('daily_cd', -1)
+        self.update_hr_cd.start()
+    
+    @tasks.loop(seconds=1)
+    async def update_hr_cd(self):
+        member_cd = hourly_cd.find({}).sort("date", -1)
+        if member_cd != None:
+            for x in member_cd:
+                member_id, end_time = member_cd['_id'], member_cd['hr_cd']
+                time_now = datetime.datetime.utcnow()
+                if time_now >= end_time:
+                    hourly_cd.delete_one({"_id": member_id})
 
     @commands.command()
     async def start(self, ctx):
@@ -245,7 +254,7 @@ class Economy(commands.Cog):
         if search:
             hr_cd = get_hourly_cd(ctx.author.id)
             rewards_Cd += f"{hr_cd}\n"
-            
+
             earning_commands_name = ['beg', 'roam']
             earnings_cd = ""
             for x in earning_commands_name:
