@@ -46,7 +46,7 @@ async def on_ready():
     member_cleanup.start()
 
 
-@task.loop(seconds=60)
+@tasks.loop(seconds=60)
 async def member_cleanup():
     members = leveling.find({})
     for x in members:
