@@ -263,9 +263,9 @@ class Economy(commands.Cog):
                 command_cd = get_earning_cd(ctx, command_earn_CD, x)
                 earnings_cd += f"{command_cd}\n"
 
-            embed = discord.Embed( 
-                description = f"🎁 **Rewards**\n{rewards_Cd}\n{coin_emoji} **Earnings**\n{earnings_cd}",
-                color = embed_color)
+            embed = discord.Embed( color = embed_color)
+            embed.add_filed(name="🎁 Rewards", value=rewards_Cd, inline= False)
+            embed.add_filed(name=f"{coin_emoji} Earnings", value=earnings_cd, inline=False)
             embed.set_author(name=f"{ctx.author.name}'s cooldown", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
         else:
