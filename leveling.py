@@ -52,7 +52,7 @@ async def member_cleanup():
     for x in members:
         guild = bot.get_guild(705513318747602944)
         member_id = x['_id']
-        member_search = guild.get_member(x['id'])
+        member_search = guild.get_member(x['_id'])
         if member_search is None:
             leveling.delete_one({"_id": member_id})
         else:
