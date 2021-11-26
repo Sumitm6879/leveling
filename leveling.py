@@ -3,7 +3,7 @@ from datetime import datetime
 from os import name
 import discord
 from discord import client
-from discord.ext import commands
+from discord.ext import commands, tasks
 from easy_pil import Editor
 from PIL import Image, ImageDraw, ImageFont
 import datetime
@@ -43,7 +43,21 @@ async def on_ready():
     print("Logged in as: " + bot.user.name + "\n")
     chan = bot.get_channel(721361976957206568)
     await chan.send("Leveling Bot ONline")
-    
+    member_cleanup.start()
+
+
+@task.loop(seconds=60)
+async def member_cleanup():
+    members = leveling.find({})
+    for x in members:
+        guild = self.client.fetch_guild(705513318747602944)
+        member_id = x['_id']
+        member_search = guild.get_member(x['id'])
+        if member_search is None:
+            leveling.delete_one({"_id": member_id})
+        else:
+            pass
+
 
 @bot.listen('on_message')
 async def on_message(message):

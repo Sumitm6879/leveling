@@ -224,7 +224,7 @@ class Economy(commands.Cog):
             index = leveling.find_one({"_id": ctx.author.id})
             xp = index['xp']
             level = calculate_level(xp)
-            roam_money = (level*random.randint(8,13)+random.randint((level//10), level))*globalMultiplier
+            roam_money = (level*random.randint(8,12)+random.randint((level//10), level))*globalMultiplier
             old_wallet = stats['wallet']
             new_wallet = old_wallet + roam_money
             profile.update_one({"_id": ctx.author.id}, {"$set": {"wallet": new_wallet}})
@@ -264,7 +264,7 @@ class Economy(commands.Cog):
                 earnings_cd += f"{command_cd}\n"
 
             embed = discord.Embed( 
-                description = f"🎁 **Rewards**\n {rewards_Cd}{coin_emoji} **Earnings**\n{earnings_cd}",
+                description = f"🎁 **Rewards**\n{rewards_Cd}\n{coin_emoji} **Earnings**\n{earnings_cd}",
                 color = embed_color)
             embed.set_author(name=f"{ctx.author.name}'s cooldown", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
