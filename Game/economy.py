@@ -351,7 +351,7 @@ class Economy(commands.Cog):
                 hourly_rank = get_user_rank(ctx, level)
                 embed = discord.Embed(
                     title="claimed hourly reward",
-                    description=f"Hourly reward for {hourl_rank.mention}\n{coin_emoji} {hourly_rewards}", 
+                    description=f"Hourly reward for {hourly_rank.mention}\n{coin_emoji} {hourly_rewards}", 
                     color=embed_color)
                 embed.set_author(name=f"{ctx.author.name}", icon_url=ctx.author.avatar_url)
 
