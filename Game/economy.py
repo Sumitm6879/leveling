@@ -66,7 +66,7 @@ class Economy(commands.Cog):
         member_cd = hourly_cd.find({}).sort("date", -1)
         if member_cd != None:
             for x in member_cd:
-                member_id, end_time = member_cd['_id'], member_cd['hr_cd']
+                member_id, end_time = x['_id'], x['hr_cd']
                 time_now = datetime.datetime.utcnow()
                 if time_now >= end_time:
                     hourly_cd.delete_one({"_id": member_id})
