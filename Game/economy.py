@@ -369,7 +369,7 @@ class Economy(commands.Cog):
                 end_cd = cooldown_hr['hr_cd']
                 hr_cd = end_cd - datetime.datetime.utcnow()
                 minutes, seconds = divmod(int(hr_cd.total_seconds()), 60)
-                em = discord.Embed(title=f"Try again in **{minute}m {seconds}s**.", description="", color=embed_color)
+                em = discord.Embed(title=f"Try again in **{minutes}m {seconds}s**.", description="", color=embed_color)
                 em.set_author(name=f"{ctx.author.name}'s cooldown")
                 await ctx.send(embed=em)
 
