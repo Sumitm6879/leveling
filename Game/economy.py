@@ -511,9 +511,9 @@ def get_hourly_rewards(level):
     return reward
 
 def get_user_rank(ctx, level):
-    if level in range(1, 3):
+    if level in range(1, 5):
         rank = ctx.guild.get_role(794886884497031168)
-    if level in range(5,10):
+    elif level in range(5,10):
         rank = ctx.guild.get_role(794896587943575563)
     elif level in range(10,20):
         rank = ctx.guild.get_role(794896588623052830)
@@ -531,4 +531,5 @@ def get_user_rank(ctx, level):
         rank = ctx.guild.get_role(796354367711870997)
     elif level > 200:
         rank = ctx.guild.get_role(794896709380866098)
+
     return rank
