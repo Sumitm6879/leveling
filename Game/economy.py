@@ -128,7 +128,7 @@ class Economy(commands.Cog):
                 money = convert_str_to_number(money)
             if isinstance(money, int):
                 old_wallet = stats['wallet']
-                if money <= old_wallet:
+                if money <= old_wallet and money > 0:
                     new_wallet = old_wallet-money
                     new_bank = stats['bank'] + money
                     profile.update_one({"_id": ctx.author.id}, {"$set":{"wallet": new_wallet}})
@@ -157,7 +157,7 @@ class Economy(commands.Cog):
                 money = convert_str_to_number(money)
             if isinstance(money, int):
                 old_bank = stats['bank']
-                if money <= old_bank:
+                if money <= old_bank and money > 0:
                     new_wallet = stats['wallet'] + money
                     new_bank = stats['bank'] - money
                     profile.update_one({"_id": ctx.author.id}, {"$set":{"wallet": new_wallet}})
@@ -301,7 +301,7 @@ class Economy(commands.Cog):
                 statements = ['you can only slots 1 or more coins', "you don't have any money to slots", "check you wallet lmao"]
                 return await ctx.send(f"**{ctx.author.name}** " + "{0}".format(random.choice(statements)))
 
-            if money <= old_wallet:
+            if money <= old_wallet and money > 0:
                 if slots_win: # win situation
                     chance3 = random.randint(0,8)
                     if chance3 == (chance2 + chance1):
