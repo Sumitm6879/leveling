@@ -405,7 +405,7 @@ class Economy(commands.Cog):
             else:
                 reward = -money
                 reward_text = f"it was {result.capitalize()}!"
-                embed.add_filed(name=f"You lost {money:,} {coin_emoji}", value=f"You chose {cf_side.capitalize()}")
+                embed.add_field(name=f"You lost {money:,} {coin_emoji}", value=f"You chose {cf_side.capitalize()}")
                 if result == 'heads':
                     embed.set_thumbnail(url=cf_head)
                 else:
