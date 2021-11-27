@@ -388,7 +388,7 @@ class Economy(commands.Cog):
         if money > 0 and money <= old_wallet:
             cfSides = ['heads', 'tails']
             result = random.choice(cfSides)
-            landOnSide = random.randit(1,101)
+            landOnSide = random.randint(1,101)
             if landOnSide == 1:
                 reward = random.randint(1, money)
                 reward_text = f"the {coin_emoji} landed on it's Side!"
@@ -417,7 +417,7 @@ class Economy(commands.Cog):
             embed.description += reward_text
             await ctx.send(embed = embed)
         
-        
+
 
             
 
