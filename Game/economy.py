@@ -552,7 +552,7 @@ def get_hourly_cd(player_id):
 
 
 def get_daily_cd(player_id):
-    command_cd - daily_cd.find_one({"_id": player_id})
+    command_cd = daily_cd.find_one({"_id": player_id})
     if command_cd != None:
         end_cd = command_cd['daily_cd']
         dy_cd = end_cd - datetime.datetime.utcnow()
