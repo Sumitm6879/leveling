@@ -376,7 +376,7 @@ class Economy(commands.Cog):
                 await ctx.send(embed=em)
 
 
-    @command.command()
+    @commands.command()
     async def daily(self, ctx):
         stats = profile.find_one({"_id": ctx.author.id})
         cooldown_check = daily_cd.find_one({"_id": ctx.author.id})
