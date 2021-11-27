@@ -561,6 +561,7 @@ def get_daily_cd(player_id):
         time = f"🕐 ~-~ `Daily` (**{hours}h {minutes}m {seconds}s**)"
     else:
         time = "✅ ~-~ `Daily`"
+    return time
         
 
 
