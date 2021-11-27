@@ -22,6 +22,11 @@ globalMultiplier = gM['globalmultiplier']
 #currency 
 coin_emoji = '🪙'
 
+#thumbnails
+cf_head = "https://i.imgur.com/BvnksIe.png"
+cf_tail = "https://i.imgur.com/i6XvztF.png"
+cf_sides = "https://imgur.com/2l48T28"
+
 #embed specifications
 embed_color = 0x2a72f7
 
@@ -337,8 +342,8 @@ class Economy(commands.Cog):
                 return await ctx.send(f"**{ctx.author.name}** you don't have that much coins!")
         else:
             tada = new_to_this(ctx)
-            await ctx.send("")
-        
+            await ctx.send(tada)
+
     @slots.error
     async def slots_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
@@ -346,6 +351,80 @@ class Economy(commands.Cog):
             embed.set_author(name=f"{ctx.author.name}", icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
     
+
+    @commands.command(aliases=['cf'])
+    async def coinflip(self, ctx, side:str, money:str):
+        stats = profile.find_one({"_id": ctx.author.id})
+        if stats is None:
+            tada = new_to_this(ctx)
+            return await ctx.send(tada)
+        
+        coinsides = ['heads','head', 'h', 'tails', 't', 'tail']
+        if not side.lower() in coinsides:
+            return await ctx.send("Choose a side `heads/tails`")
+        
+        if side.lower() in ['heads', 'head', 'h']:
+            cf_side = 'heads'
+        elif side.lower() in ['tails', 'tail', 't']:
+            cf_side = 'tails'
+        
+        if money.lower() == all:
+            money = stats['wallet']
+        else:
+            money = convert_str_to_number(money)
+        
+        index = leveling.find_one({"_id": ctx.author.id})
+        xp = index['xp']
+        level = calculate_level(xp)
+        
+        old_wallet = stats['wallet']
+        if old_wallet == 0:
+            statements = ['you can only slots 1 or more coins', "you don't have any money to slots", "check you wallet lmao"]
+            return await ctx.send(f"**{ctx.author.name}** " + "{0}".format(random.choice(statements)))
+        
+        embed = discord.Embed(description="", color=embed_color)
+        embed.set_author(name=f"{ctx.author.name}'s coinflip", icon_url=ctx.author.avatar_url)
+        
+        if money > 0 and money <= old_wallet:
+            cfSides = ['heads', 'tails']
+            result = random.choice(cfSides)
+            landOnSide = random.randit(1,101)
+            if landOnSide == 1:
+                reward = random.randint(1, money)
+                reward_text = f"the {coin_emoji} landed on it's Side!"
+                embed.add_field(name=f"You won {reward:,} {coin_emoji}", value=f"You chose {cf_side.capitalize()}")
+                embed.set_thumbnail(url=cf_sides)
+            elif cf_side.lower() == result.lower():
+                reward = money
+                reward_text = f"{coin_emoji} it's {result.capitalize()}"
+                embed.add_field(name=f"You won {reward:,} {coin_emoji}", value=f"You chose {cf_side.capitalize()}")
+                if result == 'heads':
+                    embed.set_thumbnail(url=cf_head)
+                else:
+                    embed.set_thumbnail(url=cf_tail)
+            else:
+                reward = -money
+                reward_text = f"it was {result.capitalize()}!"
+                embed.add_filed(name=f"You lost {money:,} {coin_emoji}", value=f"You chose {cf_side.capitalize()}")
+                if result == 'heads':
+                    embed.set_thumbnail(url=cf_head)
+                else:
+                    embed.set_thumbnail(url=cf_tail)
+            
+            new_wallet = stats['wallet'] + reward
+            profile.update_one({"_id": ctx.author.id}, {"$set": {"wallet": new_wallet}})
+
+            embed.description += reward_text
+            await ctx.send(embed = embed)
+        
+        
+
+            
+
+
+
+
+
 
     @commands.command(aliases=['hr'])
     async def hourly(self, ctx):
