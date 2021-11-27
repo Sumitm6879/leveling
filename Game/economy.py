@@ -583,7 +583,7 @@ def get_hourly_rewards(level):
     return reward
 
 
-def get_hourly_rewards(level):
+def get_daily_rewards(level):
     if level in range(1,11):
         reward = 200
     elif level in range(11,21):
