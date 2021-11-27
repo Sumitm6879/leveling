@@ -368,7 +368,7 @@ class Economy(commands.Cog):
         elif side.lower() in ['tails', 'tail', 't']:
             cf_side = 'tails'
         
-        if money.lower() == all:
+        if money.lower() == "all":
             money = stats['wallet']
         else:
             money = convert_str_to_number(money)
