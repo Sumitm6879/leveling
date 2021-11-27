@@ -60,16 +60,27 @@ class Economy(commands.Cog):
     async def on_ready(self):
         print("Economy Ready!")
         self.update_hr_cd.start()
+        slef.update_dy_cd.start()
     
     @tasks.loop(seconds=1)
     async def update_hr_cd(self):
-        member_cd = hourly_cd.find({}).sort("date", -1)
+        member_cd = hourly_cd.find({}).sort("date", 1)
         if member_cd != None:
             for x in member_cd:
                 member_id, end_time = x['_id'], x['hr_cd']
                 time_now = datetime.datetime.utcnow()
                 if time_now >= end_time:
                     hourly_cd.delete_one({"_id": member_id})
+
+    @tasks.loop(seconds=1)
+    async def update_dy_cd(self):
+        member_cd = daily_cd.find({}).sort("date", 1)
+        if member_cd != None:
+            for x in member_cd:
+                member_id, end_time = x['_id'], x['daily_cd']
+                time_now = datetime.datetime.utcnow()
+                if time_now>= end_time:
+                    daily_cd.delete_one({"_id": member_id})
 
     @commands.command()
     async def start(self, ctx):
