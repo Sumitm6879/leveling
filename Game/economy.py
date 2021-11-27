@@ -419,7 +419,7 @@ class Economy(commands.Cog):
             await ctx.send(embed = embed)
     
     @coinflip.error
-    async def coinflip_error(self, ctx):
+    async def coinflip_error(self, ctx, error):
         if isinstance(error, commands.CommandOnCooldown):
             embed = discord.Embed(description=f"**{ctx.author.name}** Don't spam wait atleast 1 second before typing command", color=embed_color)
             embed.set_author(name=f"{ctx.author.name}", icon_url=ctx.author.avatar_url)
