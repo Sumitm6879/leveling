@@ -13,7 +13,7 @@ profile = cluster['Economy']['economy-profile']
 imoc = cluster['Economy']['economy-in_middle_of_command']
 global_multi = cluster['Economy']['economy-GLOBAL']
 hourly_cd = cluster['Economy']['economy-hourly_cd'] 
-daily_cd = cluster
+daily_cd = cluster['Economy']['economy-daily_cd']
 
 #Globals specification
 gM = global_multi.find_one({"_id": "globalMulti"})
@@ -133,9 +133,9 @@ class Economy(commands.Cog):
                     new_bank = stats['bank'] + money
                     profile.update_one({"_id": ctx.author.id}, {"$set":{"wallet": new_wallet}})
                     profile.update_one({"_id": ctx.author.id}, {"$set":{"bank": new_bank}})
-                    await ctx.send(f"**{ctx.author.name}** deposited {coin_emoji} **{money}**")
+                    await ctx.send(f"**{ctx.author.name}** deposited {coin_emoji} **{money:,}**")
                 else:
-                    return await ctx.send("Check your wallet **{ctx.author.name}** Lmao!")
+                    return await ctx.send(f"Check your wallet **{ctx.author.name}** Lmao!")
             else:
                 return await ctx.send(f"**{ctx.author.name}** please enter a valid amount!")
         else:
@@ -162,7 +162,7 @@ class Economy(commands.Cog):
                     new_bank = stats['bank'] - money
                     profile.update_one({"_id": ctx.author.id}, {"$set":{"wallet": new_wallet}})
                     profile.update_one({"_id": ctx.author.id}, {"$set":{"bank": new_bank}})
-                    await ctx.send(f"**{ctx.author.name}** {coin_emoji} **{money}** withdrawn")
+                    await ctx.send(f"**{ctx.author.name}** {coin_emoji} **{money:,}** withdrawn")
                 else:
                     return await ctx.send("**{ctx.author.name}** duh! check your bank and try again")
             else:
@@ -189,7 +189,7 @@ class Economy(commands.Cog):
                     return await ctx.send(f"{failed_sentence}")
                 xp = index['xp']
                 level = calculate_level(xp)
-                beg_money = (level*(random.randint(1,3))+random.randint((level//10),level))*globalMultiplier
+                beg_money = (level*(random.randint(1,3))+random.randint(((level+10)//10),level))*globalMultiplier
                 new_wallet = stats['wallet'] + beg_money
                 profile.update_one({"_id": ctx.author.id}, {"$set":{"wallet":new_wallet}})
                 await ctx.send(f"**{ctx.author.name}** you earned {coin_emoji} **{beg_money}**")
@@ -253,7 +253,9 @@ class Economy(commands.Cog):
             return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
         if search:
             rewards_Cd = ""
+            dy_cd = get_daily_cd(ctx.author.id)
             hr_cd = get_hourly_cd(ctx.author.id)
+            rewards_Cd += f"{dy_cd}\n"
             rewards_Cd += f"{hr_cd}\n"
 
             earning_commands_name = ['beg', 'roam']
@@ -350,8 +352,8 @@ class Economy(commands.Cog):
                 hourly_rewards = get_hourly_rewards(level)
                 hourly_rank = get_user_rank(ctx, level)
                 embed = discord.Embed(
-                    title="claimed hourly reward",
-                    description=f"Hourly reward for {hourly_rank.mention}\n{coin_emoji} {hourly_rewards}", 
+                    title="Claimed hourly reward",
+                    description=f"Hourly reward for {hourly_rank.mention}\n**+{hourly_rewards:,}** {coin_emoji}", 
                     color=embed_color)
                 embed.set_author(name=f"{ctx.author.name}", icon_url=ctx.author.avatar_url)
 
@@ -372,6 +374,63 @@ class Economy(commands.Cog):
                 em = discord.Embed(title=f"Try again in **{minutes}m {seconds}s**.", description="", color=embed_color)
                 em.set_author(name=f"{ctx.author.name}'s cooldown")
                 await ctx.send(embed=em)
+
+
+    @command.command()
+    async def daily(self, ctx):
+        stats = profile.find_one({"_id": ctx.author.id})
+        cooldown_check = daily_cd.find_one({"_id": ctx.author.id})
+        imoc_check = find_imoc(ctx.author.id)
+        if imoc_check is False:
+            return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
+        if stats:
+            if cooldown_check is None:
+                index = leveling.find_one({"_id": ctx.author.id})
+                xp = index['xp']
+                level = calculate_level(xp)
+                member_rank = get_user_rank(ctx, level)
+                daily_reward = get_daily_rewards(level)
+
+                claim_now = datetime.datetime.utcnow()
+                try:
+                    last_claim = stats['last_claim']
+                except:
+                    last_claim = claim_now
+                    profile.update_one({"_id": ctx.author.id}, {"$set": {"last_claim": claim_now}})
+                try:
+                    daily_streak = stats['daily_streak']
+                except:
+                    daily_streak = 0
+                    profile.update_one({"_id": ctx.author.id}, {"$set": {"daily_streak": daily_streak}})
+                total_streak = update_daily_streak(ctx, level, daily_streak, claim_now, last_claim)
+                streak_bonus = get_daily_streak_bonus(ctx, level, total_streak)
+
+                embed = discord.Embed(
+                    title="Claimed daily reward",
+                    description = f"Daily reward for {member_rank.mention} rank\n**+{daily_reward:,}** {coin_emoji}",
+                    color= embed_color)
+                embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+                embed.set_footer(text=f"Daily streak bonus {streak_bonus:,} coins")
+
+                old_wallet = stats['wallet']
+                new_wallet = old_wallet + daily_reward + streak_bonus
+                profile.update_one({"_id": ctx.author.id}, {"$set": {"wallet": new_wallet}})
+
+                dy_cd = datetime.datetime.utcnow() + datetime.timedelta(hours=24) # setting daily cd
+                date = datetime.datetime.utcnow()
+                daily_cd.insert_one({"_id": ctx.author.id, "daily_cd": dy_cd, "date": date})
+
+                await ctx.send(embed=embed)
+            
+            else:
+                end_cd = cooldown_check['daily_cd']
+                dy_cd = end_cd - datetime.datetime.utcnow()
+                hours, reminder = divmod(int(dy_cd.total_seconds()), 60*60)
+                minutes, seconds = divmod(reminder, 60)
+                em = discord.Embed(title=f"Try again in {hours}h {minutes}m {seconds}s...", description="", color=embed_color)
+                em.set_author(name=f"{ctx.author.name}'s cooldown")
+                await ctx.send(embed=em)
+        
 
 
 def setup(bot):
@@ -492,6 +551,18 @@ def get_hourly_cd(player_id):
     return time
 
 
+def get_daily_cd(player_id):
+    command_cd - daily_cd.find_one({"_id": player_id})
+    if command_cd != None:
+        end_cd = command_cd['daily_cd']
+        dy_cd = end_cd - datetime.datetime.utcnow()
+        hours, reminder = divmod(int(dy_cd.total_seconds()), 60*60)
+        minutes, seconds = divmod(reminder, 60)
+        time = f"🕐 ~-~ `Daily` (**{hours}h {minutes}m {seconds}s**)"
+    else:
+        time = "✅ ~-~ `Daily`"
+        
+
 
 def get_hourly_rewards(level):
     if level in range(1,11):
@@ -509,6 +580,47 @@ def get_hourly_rewards(level):
     elif level >= 181:
         reward = 5000
     return reward
+
+
+def get_hourly_rewards(level):
+    if level in range(1,11):
+        reward = 200
+    elif level in range(11,21):
+        reward = 400
+    elif level in range(21,41):
+        reward = 800
+    elif level in range(41,81):
+        reward = 1200
+    elif level in range(81, 121):
+        reward = 2400
+    elif level in range(121, 181):
+        reward = 5000
+    elif level >= 181:
+        reward = 10000
+    return reward
+
+
+def update_daily_streak(ctx, level, daily_streak, claim_now, last_claim):
+    delta = claim_now - last_claim
+    if delta > datetime.timedelta(hours=48):
+        new_streak = 0
+        daily_streak = new_streak
+    else:
+        if daily_streak < 7:
+            daily_streak +=1
+        elif daily_streak == 7:
+            daily_streak = 7
+    profile.update_one({"_id": ctx.author.id}, {"$set": {"daily_streak": daily_streak}})
+    now = datetime.datetime.utcnow()
+    profile.update_one({"_id": ctx.author.id}, {"$set": {"last_claim": now}})
+    return daily_streak
+
+
+def get_daily_streak_bonus(ctx, level, total_streak):
+    multiplier = 1 + total_streak
+    bonus = (level*multiplier) + 100 + random.randint(1,level)
+    return bonus
+
 
 def get_user_rank(ctx, level):
     if level in range(1,5):
@@ -533,5 +645,4 @@ def get_user_rank(ctx, level):
         rank = ctx.guild.get_role(794896709380866098)
     else:
         rank = None
-
     return rank
