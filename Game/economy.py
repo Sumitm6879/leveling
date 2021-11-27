@@ -353,6 +353,7 @@ class Economy(commands.Cog):
     
 
     @commands.command(aliases=['cf'])
+    @commands.cooldown(1, 1, commands.BucketType.user)
     async def coinflip(self, ctx, side:str, money:str):
         stats = profile.find_one({"_id": ctx.author.id})
         if stats is None:
@@ -416,7 +417,13 @@ class Economy(commands.Cog):
 
             embed.description += reward_text
             await ctx.send(embed = embed)
-        
+    
+    @coinflip.error
+    async def coinflip_error(self, ctx):
+        if isinstance(error, commands.CommandOnCooldown):
+            embed = discord.Embed(description=f"**{ctx.author.name}** Don't spam wait atleast 1 second before typing command", color=embed_color)
+            embed.set_author(name=f"{ctx.author.name}", icon_url=ctx.author.avatar_url)
+            await ctx.send(embed=embed)
 
 
             
