@@ -60,7 +60,7 @@ class Economy(commands.Cog):
     async def on_ready(self):
         print("Economy Ready!")
         self.update_hr_cd.start()
-        slef.update_dy_cd.start()
+        self.update_dy_cd.start()
     
     @tasks.loop(seconds=1)
     async def update_hr_cd(self):
