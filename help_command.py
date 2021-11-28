@@ -47,7 +47,7 @@ class Help(commands.Cog):
         while True:
             try:
                 event = await self.bot.wait_for("select_option", timeout=60)
-                if event.author.id == ctx.author.id and event.channel == ctx.channel:
+                if event.author.id == ctx.author.id and event.message.id == msg.id:
                     if event.values[0] == "LC":
                         await msg.edit(embed=embed1)
                         await event.defer(ignore=True)
