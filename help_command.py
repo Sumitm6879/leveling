@@ -24,8 +24,8 @@ class Help(commands.Cog):
 
     @commands.command(aliases=['h'])
     async def help(self, ctx):
-        embed1 = get_embed1(ctx)
-        embed2 = get_embed2(ctx)
+        embed1 = get_embed1(self, ctx)
+        embed2 = get_embed2(self, ctx)
         
         em = discord.Embed(description="Choose from the below to get help on the listed topic", color = 0xff0000)
         em.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
