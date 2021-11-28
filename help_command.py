@@ -23,7 +23,7 @@ class Help(commands.Cog):
             await interaction.respond(type=6)
 
     @commands.command(aliases=['h'])
-    async def help(ctx):
+    async def help(self, ctx):
         embed1 = self.get_embed1(ctx)
         embed2 = self.get_embed2(ctx)
         
