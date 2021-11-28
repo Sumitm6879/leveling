@@ -15,13 +15,13 @@ class Help(commands.Cog):
 
     @commands.Cog.listener("on_button_click")
     async def on_button_click(self, interaction):
-        if interaction.component.custom_id == str(interaction.user.id):
-            member = interaction.user
+        if interaction.component.custom_id == str(interaction.author.id):
+            member = interaction.author
             mesg = interaction.message
             em = discord.Embed(description="Process Ended!\n**`;help` to get help menu again!**", color = 0xff0000)
             em.set_author(name=member.name, icon_url=member.avatar_url)
-            await mesg.edit(embed=em)
-            await interaction.respond(type=6)
+            await mesg.edit(embed=em, components=[])
+            await interaction.defer(ignore=True)
 
     @commands.command(aliases=['h'])
     async def help(self, ctx):
@@ -52,13 +52,13 @@ class Help(commands.Cog):
         while True:
             try:
                 event = await self.bot.wait_for("select_option", timeout=60)
-                if event.user.id == ctx.author.id and event.channel == ctx.channel:
+                if event.author.id == ctx.author.id and event.channel == ctx.channel:
                     if event.values[0] == "LC":
                         await msg.edit(embed=embed1)
-                        await event.respond(type=6)
+                        await event.defer(ignore=True)
                     elif event.values[0] == "EC":
                         await msg.edit(embed=embed2)
-                        await event.respond(type=6)
+                        await event.defer(ignore=True)
             except asyncio.TimeoutError:
                 em.description = f"Timeout\n**`;help` to get menu again!**" 
                 await msg.edit(embed=em,components=[Button(label='Timeout', style = ButtonStyle.grey, emoji='⏱', disabled=True)])
