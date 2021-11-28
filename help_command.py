@@ -2,16 +2,11 @@ import discord
 from discord.ext import commands
 import asyncio
 import datetime
-from discord_components import DiscordComponents, Button, ButtonStyle, Select, SelectOption, Interaction, component
+from discord_components import Button, ButtonStyle, Select, SelectOption, Interaction, component
 
 class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    
-    @commands.Cog.listener()
-    async def on_ready(self):
-        DiscordComponents(self.bot)
 
     @commands.Cog.listener("on_button_click")
     async def on_button_click(self, interaction):

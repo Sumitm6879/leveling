@@ -14,7 +14,7 @@ from pymongo import MongoClient
 import mleveling
 import rank_card
 import help_command
-from discord_slash import SlashCommand
+from discord_slash_components_bridge import SlashCommand
 
 P = 'sumitm6879sm'
 cluster = MongoClient(
