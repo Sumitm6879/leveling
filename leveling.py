@@ -13,6 +13,7 @@ from discord.ext.commands import CommandNotFound, MemberNotFound, MissingPermiss
 from pymongo import MongoClient
 import mleveling
 import rank_card
+import help_command
 from discord_slash import SlashCommand
 
 P = 'sumitm6879sm'
@@ -31,7 +32,7 @@ bot = commands.Bot(command_prefix=';',
                    case_insensitive=True)
 slash = SlashCommand(bot, sync_commands=True)
 bot.remove_command('help')
-cogs = [mleveling, rank_card, economy, ecomod]
+cogs = [mleveling, rank_card, economy, ecomod, help_command]
 
 for i in range(len(cogs)):
     cogs[i].setup(bot)
@@ -283,41 +284,41 @@ async def lvl(ctx, member: discord.Member = None):
         await ctx.send(f"**{member.name}'s** level", file=file)
     
     
-@bot.command(aliases=['h'])
-async def help(ctx, arg: str = None):
-    if arg is None:
-        embed = discord.Embed(
-            title='Mystic Leveling System',
-            description='Everyone Gets **1xp** per message\nServer boosters Get **2xp** per message',
-            color=0xff0000,
-            timestamp=datetime.datetime.utcnow()
-        )
-        embed.add_field(name='Commands', value='🔻🔻🔻🔻', inline=False)
-        embed.add_field(name=f"{bot.command_prefix}level", value="Shows your level\n**Aliases**\n> `lvl`, `rank`", inline=False)
-        embed.add_field(name=f"{bot.command_prefix}leaderboard", value="Shows server Leaderboard\n**Aliases**\n> "
-                                                                       "`lb`, `top`", inline=False)
-        embed.add_field(name=f'{bot.command_prefix}background', value='Shows available background\n**Aliases**\n> '
-                                                                      '`bg`, `background`', inline=False) 
-        embed.set_thumbnail(url=bot.user.avatar_url)
-        embed.set_author(name=f'{ctx.author.name}', icon_url=ctx.author.avatar_url)
-        await ctx.send(embed=embed)
-    elif arg.lower() == 'staff':
-        embed = discord.Embed(
-            title='Mystic Leveling System',
-            description='Everyone Gets **1xp** per message\nServer boosters Get **2xp** per message',
-            color=0xff0000,
-            timestamp=datetime.datetime.utcnow()
-        )
-        embed.add_field(name='Staff Commands', value='🔻🔻🔻🔻', inline=False)
-        embed.add_field(name=f'{bot.command_prefix}add-xp [member] [amount]',
-                        value='> Adds amount xp to member\n> Requires Kick members permission', inline=False)
-        embed.add_field(name=f'{bot.command_prefix}rev-xp [member] [amount]',
-                        value='> Removes amount xp from member\n> Requires Kick members permission', inline=False)
-        embed.add_field(name=f'{bot.command_prefix}set level [member] [level]',
-                        value='> changes the level of member\n> Requires Kick members permission', inline=False)
-        embed.set_thumbnail(url=bot.user.avatar_url)
-        embed.set_author(name=f'{ctx.author.name}', icon_url=ctx.author.avatar_url)
-        await ctx.send(embed=embed)
+# @bot.command(aliases=['h'])
+# async def help(ctx, arg: str = None):
+#     if arg is None:
+#         embed = discord.Embed(
+#             title='Mystic Leveling System',
+#             description='Everyone Gets **1xp** per message\nServer boosters Get **2xp** per message',
+#             color=0xff0000,
+#             timestamp=datetime.datetime.utcnow()
+#         )
+#         embed.add_field(name='Commands', value='🔻🔻🔻🔻', inline=False)
+#         embed.add_field(name=f"{bot.command_prefix}level", value="Shows your level\n**Aliases**\n> `lvl`, `rank`", inline=False)
+#         embed.add_field(name=f"{bot.command_prefix}leaderboard", value="Shows server Leaderboard\n**Aliases**\n> "
+#                                                                        "`lb`, `top`", inline=False)
+#         embed.add_field(name=f'{bot.command_prefix}background', value='Shows available background\n**Aliases**\n> '
+#                                                                       '`bg`, `background`', inline=False) 
+#         embed.set_thumbnail(url=bot.user.avatar_url)
+#         embed.set_author(name=f'{ctx.author.name}', icon_url=ctx.author.avatar_url)
+#         await ctx.send(embed=embed)
+#     elif arg.lower() == 'staff':
+#         embed = discord.Embed(
+#             title='Mystic Leveling System',
+#             description='Everyone Gets **1xp** per message\nServer boosters Get **2xp** per message',
+#             color=0xff0000,
+#             timestamp=datetime.datetime.utcnow()
+#         )
+#         embed.add_field(name='Staff Commands', value='🔻🔻🔻🔻', inline=False)
+#         embed.add_field(name=f'{bot.command_prefix}add-xp [member] [amount]',
+#                         value='> Adds amount xp to member\n> Requires Kick members permission', inline=False)
+#         embed.add_field(name=f'{bot.command_prefix}rev-xp [member] [amount]',
+#                         value='> Removes amount xp from member\n> Requires Kick members permission', inline=False)
+#         embed.add_field(name=f'{bot.command_prefix}set level [member] [level]',
+#                         value='> changes the level of member\n> Requires Kick members permission', inline=False)
+#         embed.set_thumbnail(url=bot.user.avatar_url)
+#         embed.set_author(name=f'{ctx.author.name}', icon_url=ctx.author.avatar_url)
+#         await ctx.send(embed=embed)
 
 
 @bot.event
