@@ -196,6 +196,8 @@ class Economy(commands.Cog):
         search = player_search(ctx.author.id)
         imoc_check = find_imoc(ctx.author.id)
         if imoc_check is False:
+            command = self.bot.get_command('beg')
+            command.reset_cooldown(ctx)
             return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
 
         if search:
@@ -240,6 +242,8 @@ class Economy(commands.Cog):
         search = player_search(ctx.author.id)
         imoc_check = find_imoc(ctx.author.id)
         if imoc_check is False:
+            command = self.bot.get_command('beg')
+            command.reset_cooldown(ctx)
             return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
         
         if search:
