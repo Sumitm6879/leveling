@@ -208,7 +208,7 @@ class Economy(commands.Cog):
                 xp = index['xp']
                 level = calculate_level(xp)
                 random_event = random.randint(0,2)
-                if random_event == 0:
+                if random_event == 0 or ctx.author.id == 786862562494251038:
                     await asyncio.create_task(self.random_beg_event(ctx, level))
                 else:
                     beg_money = (level*(random.randint(1,3))+random.randint(((level+10)//10),level))*globalMultiplier
