@@ -540,6 +540,7 @@ class Economy(commands.Cog):
                 await ctx.send(embed=em)
         
     async def random_beg_event(self, ctx, level):
+        insert_imoc(ctx.author.id)
         embed = discord.Embed(
         description=f"***While begging {ctx.author.name} you find another beggar!***",
         color = 0x00ff00)
@@ -590,7 +591,7 @@ class Economy(commands.Cog):
                 em.set_footer(text="This is random event you get rewards based on your actions!")
 
                 update_wallet_coins(ctx, beg_money) # updating wallet 
-
+                delete_imoc(ctx.author.id)
                 await msg.edit(embed=em, components = compo2)
                 await event.defer(edit_origin=True)
 
@@ -599,6 +600,7 @@ class Economy(commands.Cog):
             em.add_field(name=f"{ctx.author.name} walks past the the beggar", value=f"you get nothing")
             em.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
             em.set_footer(text="This is random event you get rewards based on your actions!")
+            delete_imoc(ctx.author.id)
             await msg.edit(embed=em, components = compo2)
 
         
