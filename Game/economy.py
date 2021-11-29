@@ -210,8 +210,8 @@ class Economy(commands.Cog):
                     return await ctx.send(f"{failed_sentence}")
                 xp = index['xp']
                 level = calculate_level(xp)
-                random_event = random.randint(0,2)
-                if random_event == 0 or ctx.author.id == 786862562494251038:
+                random_event = random.randint(0,10)
+                if random_event == 0:
                     await asyncio.create_task(self.random_beg_event(ctx, level))
                 else:
                     beg_money = (level*(random.randint(1,3))+random.randint(((level+10)//10),level))*globalMultiplier
@@ -556,56 +556,56 @@ class Economy(commands.Cog):
         compo2 = [[Button(label="Fight",emoji="👊",style = ButtonStyle.red,disabled=True),Button(label="Give Money",emoji="👼",style=ButtonStyle.green,disabled=True),Button(label="Steal",emoji="💰", style=ButtonStyle.blue,disabled=True)]]
 
         msg = await ctx.send(embed=embed, components=compo)
+        while True:
+            try:
+                event = await self.bot.wait_for("button_click", timeout=20)
+                if event.author.id == ctx.author.id and event.message.id == msg.id:
+                    x = random.randint(0,7)
+                    if event.component.custom_id == "Fight":
+                        action = f"**{ctx.author.name} Fights**"
+                        if x in range(2,5):
+                            beg_money = ((level*(random.randint(1,3))+random.randint(((level+10)//10),level))*globalMultiplier * 3)//2
+                            reaction = f"{ctx.author.name} you Win"
+                        else:
+                            beg_money = 0
+                            reaction = f"Unfortunately the beggar was too strong {ctx.author.name} you Lost"
 
-        try:
-            event = await self.bot.wait_for("button_click", timeout=20)
-            if event.author.id == ctx.author.id and event.message.id == msg.id:
-                x = random.randint(0,7)
-                if event.component.custom_id == "Fight":
-                    action = f"**{ctx.author.name} Fights**"
-                    if x in range(2,5):
-                        beg_money = ((level*(random.randint(1,3))+random.randint(((level+10)//10),level))*globalMultiplier * 3)//2
-                        reaction = f"{ctx.author.name} you Win"
-                    else:
-                        beg_money = 0
-                        reaction = f"Unfortunately the beggar was too strong {ctx.author.name} you Lost"
+                    elif event.component.custom_id == "GiveMoney":
+                        action = f"**{ctx.author.name} Gives Money**"
+                        if x in range(1,3):
+                            beg_money = (level*(random.randint(1,3))+random.randint(((level+10)//10),level))*globalMultiplier + 500
+                            reaction = f"{ctx.author.name} You get rewarded for you kindness"
+                        else:
+                            beg_money = 0 
+                            reaction = f"{ctx.author.name} The Beggar hit you and took all the money"
 
-                elif event.component.custom_id == "GiveMoney":
-                    action = f"**{ctx.author.name} Gives Money**"
-                    if x in range(1,3):
-                        beg_money = (level*(random.randint(1,3))+random.randint(((level+10)//10),level))*globalMultiplier + 500
-                        reaction = f"{ctx.author.name} You get rewarded for you kindness"
-                    else:
-                        beg_money = 0 
-                        reaction = f"{ctx.author.name} The Beggar hit you and took all the money"
+                    elif event.component.custom_id == "Steal":
+                        action = f"**{ctx.author.name} Steals**"
+                        if x == 3:
+                            beg_money = 500 + (level*(random.randint(1,3))+random.randint(((level+10)//10),level))*globalMultiplier
+                            reaction = f"{ctx.author.name} The beggar was having quite a lot money"
+                        else:
+                            beg_money = 0
+                            reaction = f"Sad but it's true, {ctx.author.name} The beggar was broke but strong he took all your money!"
 
-                elif event.component.custom_id == "Steal":
-                    action = f"**{ctx.author.name} Steals**"
-                    if x == 3:
-                        beg_money = 500 + (level*(random.randint(1,3))+random.randint(((level+10)//10),level))*globalMultiplier
-                        reaction = f"{ctx.author.name} The beggar was having quite a lot money"
-                    else:
-                        beg_money = 0
-                        reaction = f"Sad but it's true, {ctx.author.name} The beggar was broke but strong he took all your money!"
+                    embed.description += f"\n{action}"
+                    em = discord.Embed(description=embed.description, color=0x00ff00)
+                    em.add_field(name=f"{reaction}", value=f"you get **{beg_money}** {coin_emoji}")
+                    em.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+                    em.set_footer(text="This is random event you get rewards based on your actions!")
 
-                embed.description += f"\n{action}"
+                    update_wallet_coins(ctx, beg_money) # updating wallet 
+                    delete_imoc(ctx.author.id)
+                    await msg.edit(embed=em, components = compo2)
+                    await event.defer(edit_origin=True)
+
+            except asyncio.TimeoutError:
                 em = discord.Embed(description=embed.description, color=0x00ff00)
-                em.add_field(name=f"{reaction}", value=f"you get **{beg_money}** {coin_emoji}")
+                em.add_field(name=f"{ctx.author.name} walks past the the beggar", value=f"you get nothing")
                 em.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
                 em.set_footer(text="This is random event you get rewards based on your actions!")
-
-                update_wallet_coins(ctx, beg_money) # updating wallet 
                 delete_imoc(ctx.author.id)
                 await msg.edit(embed=em, components = compo2)
-                await event.defer(edit_origin=True)
-
-        except asyncio.TimeoutError:
-            em = discord.Embed(description=embed.description, color=0x00ff00)
-            em.add_field(name=f"{ctx.author.name} walks past the the beggar", value=f"you get nothing")
-            em.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
-            em.set_footer(text="This is random event you get rewards based on your actions!")
-            delete_imoc(ctx.author.id)
-            await msg.edit(embed=em, components = compo2)
 
         
 
