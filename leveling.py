@@ -7,7 +7,7 @@ from discord.ext import commands, tasks
 from easy_pil import Editor
 from PIL import Image, ImageDraw, ImageFont
 import datetime
-from Game import economy, ecomod
+from Game import economy, ecomod, ecoshop
 from discord.ext.commands import CommandNotFound, MemberNotFound, MissingPermissions, MissingRequiredArgument, \
     BadArgument, CommandOnCooldown
 from pymongo import MongoClient
@@ -32,7 +32,7 @@ bot = commands.Bot(command_prefix=';',
                    case_insensitive=True)
 slash = SlashCommand(bot, sync_commands=True)
 bot.remove_command('help')
-cogs = [mleveling, rank_card, economy, ecomod, help_command]
+cogs = [mleveling, rank_card, economy, ecomod, help_command, ecoshop]
 
 for i in range(len(cogs)):
     cogs[i].setup(bot)
