@@ -32,6 +32,18 @@ class EcoShop(commands.Cog):
     def __int__(self, bot):
         self.bot = bot
     
+    @commands.Cog.listener()
+    async def on_ready(self):
+        pass
+    
+    @tasks.loop(seconds=5)
+    async def lottery_system(self):
+        lot_list = lottery_list.find_one({})
+        time_now = datetime.datetime.utcnow()
+        if time_now.strftime('%H:%M') == '15:7':
+            channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
+            await channel.send("OWO THis works!")
+    
     @commands.command()
     async def shop(self, ctx, page:int=1):
         stats = profile.find_one({"_id": ctx.author.id})
