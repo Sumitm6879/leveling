@@ -100,7 +100,7 @@ class EcoShop(commands.Cog):
         item_count.pop(0)
         embed = discord.Embed(color = embed_color)
         embed.set_author(name=f"{ctx.author.name}'s inventory", icon_url=ctx.author.avatar_url)
-        if len(item_list) > 1:
+        if len(item_list) >= 1:
             i = 1
             items = ""
             for x in item_list:
