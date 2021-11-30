@@ -33,7 +33,7 @@ class EcoShop(commands.Cog):
         self.bot = bot
     
     @commands.Cog.listener()
-    async def on_ready(self):
+    async def on_ready(self, bot):
         self.lottery_system.start()
         pass
     
@@ -41,7 +41,7 @@ class EcoShop(commands.Cog):
     async def lottery_system(self):
         lot_list = lottery_list.find_one({})
         time_now = datetime.datetime.utcnow()
-        if time_now.strftime('%H:%M') == '15:09':
+        if time_now.strftime('%H:%M') == '15:11':
             channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
             await channel.send("OWO THis works!")
     
