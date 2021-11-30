@@ -32,13 +32,12 @@ lotterTicket = "<:lottery_ticket:915217769379807232> lottery ticket"
 shop_items = f"""<:lottery_ticket:915217769379807232> `Lottery ticket` - allows you to join `lottery` | **1000** {coin_emoji}\n"""
 
 class EcoShop(commands.Cog):
-    def __int__(self, bot):
+    def __init__(self, bot):
         self.bot = bot
     
     @commands.Cog.listener()
     async def on_ready(self):
         self.lottery_system.start()
-        pass
     
     @tasks.loop(seconds=5)
     async def lottery_system(self):
@@ -131,13 +130,6 @@ class EcoShop(commands.Cog):
 
 
         
-
-
-                
-                
-
-    
-
 
 def setup(bot):
     bot.add_cog(EcoShop(bot))
