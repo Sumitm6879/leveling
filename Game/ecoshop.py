@@ -49,7 +49,7 @@ class EcoShop(commands.Cog):
     
     async def lotterSystem(self):
         channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
-        await channel.send("OWO THis works!")
+        await channel.send("OWO THis works!") #
     
     @commands.command()
     async def shop(self, ctx, page:int=1):
