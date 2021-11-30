@@ -96,6 +96,8 @@ class EcoShop(commands.Cog):
             item_list.append(f"{key}")
             item_count.append(invents[key])
         
+        item_list.pop(0)
+        item_count.pop(0)
         embed = discord.Embed(color = embed_color)
         embed.set_author(name=f"{ctx.author.name}'s inventory", icon_url=ctx.author.avatar_url)
         if len(item_list) > 1:
