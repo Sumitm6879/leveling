@@ -43,7 +43,7 @@ class EcoShop(commands.Cog):
     async def lottery_system(self):
         lot_list = lottery_list.find_one({})
         time_now = datetime.datetime.utcnow()
-        if time_now.strftime('%H:%M') == '16:17':
+        if time_now.strftime('%H:%M') == '16:36':
             await asyncio.create_task(self.lotterSystem(lot_list))
     
     async def lotterSystem(self, index):
