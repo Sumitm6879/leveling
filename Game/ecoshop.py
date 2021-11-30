@@ -44,10 +44,10 @@ class EcoShop(commands.Cog):
     async def lottery_system(self):
         lot_list = lottery_list.find_one({})
         time_now = datetime.datetime.utcnow()
-        if time_now.strftime('%H:%M') == '16:15':
+        if time_now.strftime('%H:%M') == '16:17':
             await asyncio.create_task(self.lotterSystem(lot_list))
     
-    async def lotterSystem(self):
+    async def lotterSystem(self, index):
         channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
         await channel.send("OWO THis works!") #
     
