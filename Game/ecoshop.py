@@ -25,8 +25,11 @@ coin_emoji = '🪙'
 #embed specifications
 embed_color = 0x2a72f7
 
+# Emoji Config with DB
+lotterTicket = "<:lottery_ticket:915217769379807232> lottery ticket"
+
 #Shop items
-shop_items = f"""<:lottery_ticket:915217769379807232> `Lottery ticket` - allows you to join `lottery` | **5000** {coin_emoji}\n"""
+shop_items = f"""<:lottery_ticket:915217769379807232> `Lottery ticket` - allows you to join `lottery` | **1000** {coin_emoji}\n"""
 
 class EcoShop(commands.Cog):
     def __int__(self, bot):
@@ -42,8 +45,11 @@ class EcoShop(commands.Cog):
         lot_list = lottery_list.find_one({})
         time_now = datetime.datetime.utcnow()
         if time_now.strftime('%H:%M') == '15:12':
-            channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
-            await channel.send("OWO THis works!")
+            await asyncio.create_task(self.lotterSystem(lot_list))
+    
+    async def lotterSystem(self):
+        channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
+        await channel.send("OWO THis works!")
     
     @commands.command()
     async def shop(self, ctx, page:int=1):
@@ -66,27 +72,27 @@ class EcoShop(commands.Cog):
         
         if item.lower() == "lottery ticket":
             old_wallet = stats['wallet']
-            if old_wallet < 5000:
+            if old_wallet < 1000:
                 return await ctx.send(f"**{ctx.author.name}** you don't have enough money to buy this item!")
 
             inventory = ecoinv.find_one({"_id": ctx.author.id})
             lot_list = lottery_list.find_one({"_id": ctx.author.id})
             if inventory is None:
-                ecoinv.insert_one({"_id": ctx.author.id, "<:lottery_ticket:915217769379807232> lottery ticket": 1})
+                ecoinv.insert_one({"_id": ctx.author.id, lotteryTicket: 1})
                 lottery_list.insert_one({"_id":ctx.author.id})
-                update_wallet_coins(ctx, -5000)
+                update_wallet_coins(ctx, -1000)
                 await ctx.send("**{}** enrolled you for the next lottery event".format(ctx.author.name))
 
             else:
                 try:
-                    lot_in_inv = inventory['lottery ticket']
+                    lot_in_inv = inventory[lotteryTicket]
                 except:
                     lot_in_inv = 0
                 
                 if lot_in_inv ==0:
-                    Inv.update_one({"_id": ctx.author.id}, {"$set": {"<:lottery_ticket:915217769379807232> lottery ticket": 1}})
+                    Inv.update_one({"_id": ctx.author.id}, {"$set": {lotteryTicket: 1}})
                     lottery_list.insert_one({"_id":ctx.author.id})
-                    update_wallet_coins(ctx, -5000)
+                    update_wallet_coins(ctx, -1000)
                     await ctx.send("**{}** enrolled you for the next lottery event".format(ctx.author.name))
 
                 elif lot_in_inv == 1:
