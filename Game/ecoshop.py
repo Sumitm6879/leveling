@@ -200,7 +200,7 @@ class EcoShop(commands.Cog):
         if end_cd < datetime.datetime.utcnow():
             return
         else:
-            remaing_time = end_cd - datetime.datetime.utcnow
+            remaing_time = end_cd - datetime.datetime.utcnow()
             hours , reminder = divmod(remaing_time.total_seconds(), 60*60)
             minutes, seconds = divmod(int(reminder), 60)
         
