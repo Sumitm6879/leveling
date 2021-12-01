@@ -152,7 +152,7 @@ class EcoShop(commands.Cog):
             await ctx.send(embed=embed)
         
         else:
-            embed.add_field(name="NO items in the inventory", value="", inline=False)
+            embed.add_field(name="Items", value="Nothing to see here :(", inline=False)
             await ctx.send(embed=embed)
 
 
