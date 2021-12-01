@@ -47,7 +47,8 @@ class EcoShop(commands.Cog):
         time_now = datetime.datetime.utcnow()
         end_time = lottery_timing.find_one({"_id": 1})["end_time"]
         if time_now >= end_time:
-            channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
+            guild = self.bot.get_guild(705513318747602944)
+            channel = guild.get_channel(721361976957206568)
             count = lottery_list.count_documents({}) 
             if count >= 1:
                 members = []
@@ -55,7 +56,7 @@ class EcoShop(commands.Cog):
                     member_id = x['_id']
                     members.append(member_id)
                 winner_id = random.choice(members)
-                winner_member = self.bot.get_member(winner_id)
+                winner_member = guild.get_member(winner_id)
                 lot_list.delete_many({})
                 for ids in members:
                     ecoinv.update_one({"_id": ids}, {"$unset":{lotteryTicket:1}})
