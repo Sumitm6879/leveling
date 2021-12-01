@@ -26,7 +26,7 @@ coin_emoji = '🪙'
 embed_color = 0x2a72f7
 
 # Emoji Config with DB
-lotterTicket = "<:lottery_ticket:915217769379807232> lottery ticket"
+lotteryTicket = "<:lottery_ticket:915217769379807232> lottery ticket"
 
 #Shop items
 shop_items = f"""<:lottery_ticket:915217769379807232> `Lottery ticket` - allows you to join `lottery` | **1,000** {coin_emoji}\n"""
