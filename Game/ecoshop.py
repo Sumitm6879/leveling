@@ -37,6 +37,7 @@ class EcoShop(commands.Cog):
     
     @commands.Cog.listener()
     async def on_ready(self):
+        pass
         #self.lottery_system.start()
     
     # @tasks.loop(seconds=60*5)
