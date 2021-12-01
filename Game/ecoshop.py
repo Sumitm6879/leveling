@@ -29,7 +29,7 @@ embed_color = 0x2a72f7
 lotterTicket = "<:lottery_ticket:915217769379807232> lottery ticket"
 
 #Shop items
-shop_items = f"""<:lottery_ticket:915217769379807232> `Lottery ticket` - allows you to join `lottery` | **1000** {coin_emoji}\n"""
+shop_items = f"""<:lottery_ticket:915217769379807232> `Lottery ticket` - allows you to join `lottery` | **1,000** {coin_emoji}\n"""
 
 class EcoShop(commands.Cog):
     def __init__(self, bot):
@@ -37,18 +37,18 @@ class EcoShop(commands.Cog):
     
     @commands.Cog.listener()
     async def on_ready(self):
-        self.lottery_system.start()
+        #self.lottery_system.start()
     
-    @tasks.loop(seconds=5)
-    async def lottery_system(self):
-        lot_list = lottery_list.find_one({})
-        time_now = datetime.datetime.utcnow()
-        if time_now.strftime('%H:%M') == '16:36':
-            await asyncio.create_task(self.lotterSystem(lot_list))
+    # @tasks.loop(seconds=60*5)
+    # async def lottery_system(self):
+    #     lot_list = lottery_list.find_one({})
+    #     time_now = datetime.datetime.utcnow()
+    #     if time_now.strftime('%H:%M') == '16:36':
+    #         await asyncio.create_task(self.lotterSystem(lot_list))
     
-    async def lotterSystem(self, index):
-        channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
-        await channel.send("OWO THis works!") #
+    # async def lotterSystem(self, index):
+    #     channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
+    #     await channel.send("OWO THis works!") #
     
     @commands.command()
     async def shop(self, ctx, page:int=1):
@@ -89,7 +89,7 @@ class EcoShop(commands.Cog):
                     lot_in_inv = 0
                 
                 if lot_in_inv ==0:
-                    Inv.update_one({"_id": ctx.author.id}, {"$set": {lotteryTicket: 1}})
+                    ecoinv.update_one({"_id": ctx.author.id}, {"$set": {lotteryTicket: 1}})
                     lottery_list.insert_one({"_id":ctx.author.id})
                     update_wallet_coins(ctx, -1000)
                     await ctx.send("**{}** enrolled you for the next lottery event".format(ctx.author.name))
