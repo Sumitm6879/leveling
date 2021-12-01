@@ -94,7 +94,7 @@ class EcoShop(commands.Cog):
             tada = new_to_this(ctx)
             return await ctx.send(tada)
         
-        embed = discord.Embed(description="**Buy items with `;buy [item]`**")
+        embed = discord.Embed(description="**Buy items with `;buy [item]`**", color=embed_color)
         embed.add_field(name="Shop", value=shop_items)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         await ctx.send(embed=embed)
