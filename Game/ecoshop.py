@@ -41,38 +41,51 @@ class EcoShop(commands.Cog):
         pass
         self.lottery_system.start()
     
-    @tasks.loop(seconds=5)
+    @tasks.loop(seconds=10)
     async def lottery_system(self):
         lot_list = lottery_list.find({})
         time_now = datetime.datetime.utcnow()
         end_time = lottery_timing.find_one({"_id": 1})["end_time"]
         if time_now >= end_time:
-            guild = self.bot.get_guild(705513318747602944)
-            channel = guild.get_channel(721361976957206568)
-            count = lottery_list.count_documents({}) 
-            if count >= 1:
-                members = []
-                for x in lot_list:
-                    member_id = x['_id']
-                    members.append(member_id)
-                winner_id = random.choice(members)
-                winner_member = guild.get_member(winner_id)
-                lottery_list.delete_many({})
-                for ids in members:
-                    ecoinv.update_one({"_id": ids}, {"$unset":{lotteryTicket:1}})
-                await channel.send(f"{winner_member.mention} has won the lottery")
-                await asyncio.create_task(self.lotterSystem(lot_list))
-            else:
-                next_time = time_now + datetime.timedelta(minutes=2)
-                await channel.send("Lottery postponed for next 2 mins")
-                lottery_timing.update_one({"_id": 1}, {"$set": {"end_time": next_time}})
+            await asyncio.create_task(self.lotterSystem())
                 
 
     
-    async def lotterSystem(self, index):
-        channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
-        await channel.send("OWO THis works!") #
+    async def lotterSystem(self):
+        guild = self.bot.get_guild(705513318747602944)
+        channel = guild.get_channel(721361976957206568)
+        count = lottery_list.count_documents({}) # number of people joined the lottery
+
+        if count >= 1:
+            members = []
+            for x in lot_list:
+                member_id = x['_id']
+                members.append(member_id) # add the members id to a empty list
+
+            winner_id = random.choice(members) # randomly choose a id from members list
+            winner_member = guild.get_member(winner_id)
+            winning_coins = ((count*1000)*3)//2
+
+            update_wallet_coins(winner_member.id, winning_coins)
+
+            for ids in members:
+                ecoinv.update_one({"_id": ids}, {"$unset":{lotteryTicket:1}}) # update the members lottery ticket in inventory
+
+            embed = discord.Embed(color=embed_color, timestamp=datetime.datetime.utcnow())
+            embed.add_field(name=f"{coin_emoji} Lottery Winner 🎉", value=f"{winner_member.name} has won {winning_coins} {coin_emoji}")
+            embed.set_footer(text=f"Total members joined {count}")
+            await channel.send(embed=embed)
+
+            next_time = time_now + datetime.timedelta(hours=24)
+            lottery_timing.update_one({"_id": 1}, {"$set": {"end_time": next_time}}) # update next lottery time
+
+            lottery_list.delete_many({})  # remove all members who joined lottery
+        else:
+            next_time = time_now + datetime.timedelta(hours=12)
+            await channel.send("Lottery postponed for next 12 hours as no one joined it :(")
+            lottery_timing.update_one({"_id": 1}, {"$set": {"end_time": next_time}})
     
+
     @commands.command()
     async def shop(self, ctx, page:int=1):
         stats = profile.find_one({"_id": ctx.author.id})
@@ -114,7 +127,7 @@ class EcoShop(commands.Cog):
                 if lot_in_inv ==0:
                     ecoinv.update_one({"_id": ctx.author.id}, {"$set": {lotteryTicket: 1}})
                     lottery_list.insert_one({"_id":ctx.author.id})
-                    update_wallet_coins(ctx, -1000)
+                    update_wallet_coins(ctx.author.id, -1000)
                     await ctx.send("**{}** enrolled you for the next lottery event".format(ctx.author.name))
 
                 elif lot_in_inv == 1:
@@ -122,14 +135,16 @@ class EcoShop(commands.Cog):
     
 
     @commands.command(aliases=['inv'])
-    async def inventory(self, ctx):
+    async def inventory(self, ctx, user:discord.Member=None):
+        if user is None:
+            user = ctx.author
         stats = profile.find_one({"_id": ctx.author.id})
         if stats is None:
             tada = new_to_this(ctx)
             return await ctx.send(tada)
-        invents = ecoinv.find_one({"_id": ctx.author.id})
+        invents = ecoinv.find_one({"_id": user.id})
         if invents is None:
-            ecoinv.insert_one({"_id": ctx.author.id})
+            ecoinv.insert_one({"_id": user.id})
 
         item_list = []
         item_count = []
@@ -140,12 +155,13 @@ class EcoShop(commands.Cog):
         item_list.pop(0)
         item_count.pop(0)
         embed = discord.Embed(color = embed_color)
-        embed.set_author(name=f"{ctx.author.name}'s inventory", icon_url=ctx.author.avatar_url)
+        embed.set_author(name=f"{user.name}'s inventory", icon_url=user.avatar_url)
         if len(item_list) >= 1:
             i = 0
             items = ""
             for x in item_list:
                 items += f"**{item_list[i]}** {item_count[i]}\n"
+                i += 1
 
             embed.add_field(name="Items", value=items, inline=True)
 
@@ -374,8 +390,8 @@ def get_user_rank(ctx, level):
     return rank
 
 
-def update_wallet_coins(ctx, money):
-    stats = profile.find_one({"_id": ctx.author.id})
+def update_wallet_coins(player_id, money):
+    stats = profile.find_one({"_id": player_id})
     old_wallet = stats['wallet']
     new_wallet = old_wallet + money
-    profile.update_one({"_id": ctx.author.id}, {"$set": {"wallet": new_wallet}})
+    profile.update_one({"_id": player_id}, {"$set": {"wallet": new_wallet}})
