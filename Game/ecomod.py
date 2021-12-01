@@ -11,6 +11,7 @@ cluster = MongoClient(
 )
 leveling = cluster['MysticBot']['levels']
 profile = cluster['Economy']['economy-profile']
+lottery_timing = cluster['Economy']['economy-lottery_timing']
 
 class EcoMod(commands.Cog):
     def __init__(self, bot):
@@ -26,6 +27,15 @@ class EcoMod(commands.Cog):
                 profile.delete_one({"_id": user.id})
                 await ctx.send(f"Removed {user.name} from game all data wiped out")
 
+    @commands.command()
+    async def startLottery(self, ctx, user:discord.Member):
+        if ctx.author.id == 786862562494251038:
+            now  = datetime.datetime.utcnow()
+            end_time = datetime.timedelta(minutes=2)
+            lottery_end_time = now + end_time
+            lottery_timing.insert_one({"_id": 1, "end_time": lottery_end_time})
+            await ctx.send("started lottery!")
+            
 
 def setup(bot):
     bot.add_cog(EcoMod(bot))

@@ -18,6 +18,7 @@ ecoinv = cluster['Economy']['economy-inventory']
 hourly_cd = cluster['Economy']['economy-hourly_cd'] 
 daily_cd = cluster['Economy']['economy-daily_cd']
 lottery_list = cluster['Economy']['economy-lottery_list']
+lottery_timing = cluster['Economy']['economy-lottery_timing']
 
 #currency 
 coin_emoji = '🪙'
@@ -40,16 +41,36 @@ class EcoShop(commands.Cog):
         pass
         #self.lottery_system.start()
     
-    # @tasks.loop(seconds=60*5)
-    # async def lottery_system(self):
-    #     lot_list = lottery_list.find_one({})
-    #     time_now = datetime.datetime.utcnow()
-    #     if time_now.strftime('%H:%M') == '16:36':
-    #         await asyncio.create_task(self.lotterSystem(lot_list))
+    @tasks.loop(seconds=5)
+    async def lottery_system(self):
+        lot_list = lottery_list.find_one({})
+        time_now = datetime.datetime.utcnow()
+        end_time = lottery_timing.find_one({"_id": 1})["end_time"]
+        if time_now >= end_time:
+            channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
+            count = lottery_list.count_documents() 
+            if count > 1:
+                members = []
+                for x in lot_list:
+                    member_id = x['_id']
+                    members.append(member_id)
+                winner_id = random.choice(members)
+                winner_member = self.bot.get_member(winner_id)
+                lot_list.delete_many({})
+                for ids in members:
+                    ecoinv.update_one({"_id": ids}, {"$unset":{lotteryTicket:1}})
+                await channel.send(f"{winner_member.mention} has won the lottery")
+                await asyncio.create_task(self.lotterSystem(lot_list))
+            else:
+                next_time = time_now + datetime.timedelta(minutes=2)
+                await channel.send("Lottery postponed for next 2 mins")
+                lottery_timing.update_one({"_id": 1}, {"$set": {"end_time": next_time}})
+                
+
     
-    # async def lotterSystem(self, index):
-    #     channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
-    #     await channel.send("OWO THis works!") #
+    async def lotterSystem(self, index):
+        channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
+        await channel.send("OWO THis works!") #
     
     @commands.command()
     async def shop(self, ctx, page:int=1):
