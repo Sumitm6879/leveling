@@ -43,7 +43,7 @@ class EcoShop(commands.Cog):
     
     @tasks.loop(seconds=5)
     async def lottery_system(self):
-        lot_list = lottery_list.find_one({})
+        lot_list = lottery_list.find({})
         time_now = datetime.datetime.utcnow()
         end_time = lottery_timing.find_one({"_id": 1})["end_time"]
         if time_now >= end_time:
