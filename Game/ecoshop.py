@@ -53,7 +53,7 @@ class EcoShop(commands.Cog):
     
     async def lotterSystem(self):
         guild = self.bot.get_guild(705513318747602944)
-        channel = guild.get_channel(721361976957206568)
+        channel = guild.get_channel(875427665463611442)
         count = lottery_list.count_documents({}) # number of people joined the lottery
 
         if count >= 1:
@@ -194,7 +194,7 @@ class EcoShop(commands.Cog):
         imoc_check = find_imoc(ctx.author.id)
         if imoc_check is False:
             return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
-            
+
         lot_time = lottery_timing.find_one({"_id": 1})
         end_cd = lot_time['end_time']
         if end_cd < datetime.datetime.utcnow():
