@@ -57,7 +57,7 @@ class EcoShop(commands.Cog):
                     members.append(member_id)
                 winner_id = random.choice(members)
                 winner_member = guild.get_member(winner_id)
-                lot_list.delete_many({})
+                lottery_list.delete_many({})
                 for ids in members:
                     ecoinv.update_one({"_id": ids}, {"$unset":{lotteryTicket:1}})
                 await channel.send(f"{winner_member.mention} has won the lottery")
