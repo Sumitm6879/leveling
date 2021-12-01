@@ -49,7 +49,7 @@ class EcoShop(commands.Cog):
         if time_now >= end_time:
             channel = self.bot.get_guild(705513318747602944).get_channel(721361976957206568)
             count = lottery_list.count_documents({}) 
-            if count > 1:
+            if count >= 1:
                 members = []
                 for x in lot_list:
                     member_id = x['_id']
