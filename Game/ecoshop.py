@@ -43,7 +43,6 @@ class EcoShop(commands.Cog):
     
     @tasks.loop(seconds=10)
     async def lottery_system(self):
-        lot_list = lottery_list.find({})
         time_now = datetime.datetime.utcnow()
         end_time = lottery_timing.find_one({"_id": 1})["end_time"]
         if time_now >= end_time:
@@ -52,6 +51,8 @@ class EcoShop(commands.Cog):
 
     
     async def lotterSystem(self):
+        lot_list =  lot_list = lottery_list.find({})
+
         guild = self.bot.get_guild(705513318747602944)
         channel = guild.get_channel(875427665463611442)
         count = lottery_list.count_documents({}) # number of people joined the lottery
@@ -201,7 +202,7 @@ class EcoShop(commands.Cog):
             return
         else:
             remaing_time = end_cd - datetime.datetime.utcnow()
-            hours , reminder = divmod(remaing_time.total_seconds(), 60*60)
+            hours , reminder = divmod(int(remaing_time.total_seconds()), 60*60)
             minutes, seconds = divmod(int(reminder), 60)
         
             embed = discord.Embed(description=f"Lottery Event in ~-~ **{hours}h {minutes}m {seconds}s**", color= embed_color)
