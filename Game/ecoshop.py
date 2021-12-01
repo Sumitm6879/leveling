@@ -75,13 +75,13 @@ class EcoShop(commands.Cog):
             embed.add_field(name=f"{coin_emoji} Lottery Winner 🎉", value=f"{winner_member.name} has won {winning_coins} {coin_emoji}")
             embed.set_footer(text=f"Total members joined {count}")
             await channel.send(embed=embed)
-
-            next_time = time_now + datetime.timedelta(hours=24)
+            
+            next_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=3)
             lottery_timing.update_one({"_id": 1}, {"$set": {"end_time": next_time}}) # update next lottery time
 
             lottery_list.delete_many({})  # remove all members who joined lottery
         else:
-            next_time = time_now + datetime.timedelta(hours=12)
+            next_time = datetime.datetime.utcnow() + datetime.timedelta(minutes=2)
             await channel.send("Lottery postponed for next 12 hours as no one joined it :(")
             lottery_timing.update_one({"_id": 1}, {"$set": {"end_time": next_time}})
     
@@ -101,6 +101,9 @@ class EcoShop(commands.Cog):
     @commands.command()
     async def buy(self, ctx, *,item:str):
         stats = profile.find_one({"_id": ctx.author.id})
+        imoc_check = find_imoc(ctx.author.id)
+        if imoc_check is False:
+            return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
         if stats is None:
             tada = new_to_this(ctx)
             return await ctx.send(tada)
@@ -138,6 +141,16 @@ class EcoShop(commands.Cog):
     async def inventory(self, ctx, user:discord.Member=None):
         if user is None:
             user = ctx.author
+        imoc_check = find_imoc(ctx.author.id)
+        if imoc_check is False:
+            return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
+        
+        imoc_check2 = find_imoc(user.id)
+        if imoc_check is False:
+            if user == ctx.author:
+                return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
+            else:
+                return await ctx.send(f"{ctx.author.mention} you can't do this {user.name} is in middle of a command")
         stats = profile.find_one({"_id": ctx.author.id})
         if stats is None:
             tada = new_to_this(ctx)
@@ -171,8 +184,29 @@ class EcoShop(commands.Cog):
             embed.add_field(name="Items", value="Nothing to see here :(", inline=False)
             await ctx.send(embed=embed)
 
+    @commands.command()
+    async def event(self, ctx):
+        stats = profile.find_one({"_id": ctx.author.id})
+        if stats is None:
+            tada = new_to_this(ctx)
+            return await ctx.send(tada)
 
+        imoc_check = find_imoc(ctx.author.id)
+        if imoc_check is False:
+            return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
+            
+        lot_time = lottery_timing.find_one({"_id": 1})
+        end_cd = lot_time['end_time']
+        if end_cd < datetime.datetime.utcnow():
+            return
+        else:
+            remaing_time = end_cd - datetime.datetime.utcnow
+            hours , reminder = divmod(remaing_time.total_seconds(), 60*60)
+            minutes, seconds = divmod(int(reminder), 60)
         
+            embed = discord.Embed(description=f"Lottery Event in ~-~ **{hours}h {minutes}m {seconds}s**", color= embed_color)
+            embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+            await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(EcoShop(bot))
