@@ -210,7 +210,7 @@ class Economy(commands.Cog):
                     return await ctx.send(f"{failed_sentence}")
                 xp = index['xp']
                 level = calculate_level(xp)
-                random_event = random.randint(0,10)
+                random_event = random.randint(0,5)
                 if random_event == 0:
                     await asyncio.create_task(self.random_beg_event(ctx, level))
                 else:
@@ -598,6 +598,7 @@ class Economy(commands.Cog):
                     delete_imoc(ctx.author.id)
                     await msg.edit(embed=em, components = compo2)
                     await event.defer(edit_origin=True)
+                    break
 
             except asyncio.TimeoutError:
                 em = discord.Embed(description=embed.description, color=0x00ff00)
