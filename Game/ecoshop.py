@@ -77,7 +77,7 @@ class EcoShop(commands.Cog):
             embed.set_footer(text=f"Total members joined {count}")
             await channel.send(embed=embed)
             
-            next_time = datetime.datetime.utcnow() + datetime.timedelta(hours==12)
+            next_time = datetime.datetime.utcnow() + datetime.timedelta(hours=12)
             lottery_timing.update_one({"_id": 1}, {"$set": {"end_time": next_time}}) # update next lottery time
 
             lottery_list.delete_many({})  # remove all members who joined lottery
