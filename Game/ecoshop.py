@@ -247,6 +247,7 @@ class EcoShop(commands.Cog):
         embed = discord.Embed(description=f"{next_lottery}\n{current_pot}\n{last_winner}", color = 0xff0000)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.set_thumbnail(url=member.avatar_url)
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(EcoShop(bot))
