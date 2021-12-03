@@ -119,7 +119,7 @@ class EcoShop(commands.Cog):
             if inventory is None:
                 ecoinv.insert_one({"_id": ctx.author.id, lotteryTicket: 1})
                 lottery_list.insert_one({"_id":ctx.author.id})
-                update_wallet_coins(ctx, -1000)
+                update_wallet_coins(ctx.author.id, -1000)
                 await ctx.send("**{}** enrolled you for the next lottery event".format(ctx.author.name))
 
             else:
