@@ -242,7 +242,7 @@ class EcoShop(commands.Cog):
         next_reward = ((total_members*(1000+random.randint(10,101)))*3)//2
         next_lottery = f"**Next Lottery:** {hours}h {minutes}m {seconds}s"
         current_pot = f"**Current Pot:** {next_reward} {coin_emoji}"
-        last_winner = f"**Last Winner: {member.name} ~-~ {winner_money}"
+        last_winner = f"**Last Winner:** {member.name} ~-~ {winner_money} {coin_emoji}"
 
         embed = discord.Embed(description=f"{next_lottery}\n{current_pot}\n{last_winner}", color = 0xff0000)
         embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
