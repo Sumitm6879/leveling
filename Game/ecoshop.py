@@ -79,6 +79,8 @@ class EcoShop(commands.Cog):
             
             next_time = datetime.datetime.utcnow() + datetime.timedelta(hours=12)
             lottery_timing.update_one({"_id": 1}, {"$set": {"end_time": next_time}}) # update next lottery time
+            lottery_timing.update_one({"_id": 1}, {"$set": {"winner_id": winner_id}}) # update winner's ID 
+            lottery_timing.update_one({"_id": 1}, {"$set": {"winner_reward": winning_coins}})
 
             lottery_list.delete_many({})  # remove all members who joined lottery
         else:
@@ -208,6 +210,43 @@ class EcoShop(commands.Cog):
             embed = discord.Embed(description=f"Lottery Event in ~-~ **{hours}h {minutes}m {seconds}s**", color= embed_color)
             embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
             await ctx.send(embed=embed)
+
+
+    @commands.command()
+    async def lottery(self, ctx):
+        stats = profile.find_one({"_id": ctx.author.id})
+        if stats is None:
+            tada = new_to_this(ctx)
+            return await ctx.send(tada)
+        imoc_check = find_imoc(ctx.author.id)
+        if imoc_check is False:
+            return await ctx.send(f"{ctx.author.mention} you can't do this end your previous command!")
+
+        lot_time = lottery_timing.find_one({"_id": 1}) # getting lottery remaining time
+        end_cd = lot_time['end_time']
+        if end_cd < datetime.datetime.utcnow():
+            return
+        else:
+            remaing_time = end_cd - datetime.datetime.utcnow()
+            hours , reminder = divmod(int(remaing_time.total_seconds()), 60*60)
+            minutes, seconds = divmod(int(reminder), 60)
+
+        index = lottery_timing.find_one({"_id": 1}) # get last winner and reward
+        winner_id, winner_money = index['winner_id'], index['winner_reward']
+        if (winner_id or winner_money) is None:
+            winner_id, winner_money = self.bot.id, 69
+        member = ctx.guild.get_member(winner_id)
+        
+        total_members = lottery_list.count_documents({}) # get all the members who joined lottery
+
+        next_reward = ((total_members*(1000+random.randint(10,101)))*3)//2
+        next_lottery = f"**Next Lottery:** {hours}h {minutes}m {seconds}s"
+        current_pot = f"**Current Pot:** {next_reward} {coin_emoji}"
+        last_winner = f"**Last Winner: {member.name} ~-~ {winner_money}"
+
+        embed = discord.Embed(description=f"{next_lottery}\n{current_pot}\n{last_winner}", color = 0xff0000)
+        embed.set_author(name=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.set_thumbnail(url=member.avatar_url)
 
 def setup(bot):
     bot.add_cog(EcoShop(bot))
