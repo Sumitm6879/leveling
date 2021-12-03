@@ -33,7 +33,7 @@ class EcoMod(commands.Cog):
             now  = datetime.datetime.utcnow()
             end_time = datetime.timedelta(minutes=2)
             lottery_end_time = now + end_time
-            lottery_timing.insert_one({"_id": 1, "end_time": lottery_end_time})
+            lottery_timing.update_one({"_id": 1}, {"$set": {"end_time": lottery_end_time}})
             await ctx.send("started lottery!")
             
 
