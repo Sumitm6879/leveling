@@ -65,7 +65,7 @@ class EcoShop(commands.Cog):
 
             winner_id = random.choice(members) # randomly choose a id from members list
             winner_member = guild.get_member(winner_id)
-            winning_coins = ((count*1000)*3)//2
+            winning_coins = ((total_members*(1000+random.randint(10,101)))*3)//2
 
             update_wallet_coins(winner_member.id, winning_coins)
 
