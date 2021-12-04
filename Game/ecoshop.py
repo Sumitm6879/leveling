@@ -54,7 +54,7 @@ class EcoShop(commands.Cog):
         lot_list = lottery_list.find({})
 
         guild = self.bot.get_guild(705513318747602944)
-        channel = guild.get_channel(875427665463611442)
+        channel = guild.get_channel(721361976957206568)
         count = lottery_list.count_documents({}) # number of people joined the lottery
 
         if count >= 1:
