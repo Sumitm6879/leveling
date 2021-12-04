@@ -73,7 +73,7 @@ class EcoShop(commands.Cog):
                 ecoinv.update_one({"_id": ids}, {"$unset":{lotteryTicket:1}}) # update the members lottery ticket in inventory
 
             embed = discord.Embed(color=embed_color, timestamp=datetime.datetime.utcnow())
-            embed.add_field(name=f"{coin_emoji} Lottery Winner 🎉", value=f"{winner_member.name} has won {winning_coins} {coin_emoji}")
+            embed.add_field(name=f"{coin_emoji} Lottery Winner 🎉", value=f"{winner_member.name} has won {winning_coins:,} {coin_emoji}")
             embed.set_footer(text=f"Total members joined {count}")
             await channel.send(embed=embed)
             
