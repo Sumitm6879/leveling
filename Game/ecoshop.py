@@ -51,7 +51,7 @@ class EcoShop(commands.Cog):
 
     
     async def lotterSystem(self):
-        lot_list =  lot_list = lottery_list.find({})
+        lot_list = lottery_list.find({})
 
         guild = self.bot.get_guild(705513318747602944)
         channel = guild.get_channel(875427665463611442)
@@ -65,7 +65,7 @@ class EcoShop(commands.Cog):
 
             winner_id = random.choice(members) # randomly choose a id from members list
             winner_member = guild.get_member(winner_id)
-            winning_coins = ((total_members*(1000+random.randint(10,101)))*3)//2
+            winning_coins = ((len(members)*(1000+random.randint(10,101)))*3)//2 
 
             update_wallet_coins(winner_member.id, winning_coins)
 
