@@ -338,13 +338,15 @@ class Economy(commands.Cog):
                     win_money = money+extra_money
                     new_wallet = old_wallet + win_money
                     profile.update_one({"_id": ctx.author.id}, {"$set":{"wallet":new_wallet}})
-                    embed = discord.Embed(description=f"You won {coin_emoji} **{win_money}**\n\n◖{emojis}◗", color=embed_color)
+                    embed = discord.Embed(color=embed_color)
+                    embed.add_field(name=f"◖{emojis}◗", value=f"You won **{win_money}** {coin_emoji} ")
                     embed.set_author(name=f"{ctx.author.name}'s slots", icon_url=ctx.author.avatar_url)
                 else:
                     new_wallet = old_wallet - money
                     profile.update_one({"_id": ctx.author.id}, {"$set":{"wallet":new_wallet}})
                     emojis = get_emoji()
-                    embed = discord.Embed(description=f"You lost {coin_emoji} **{money}**\n\n◖{emojis}◗", color=embed_color)
+                    embed = discord.Embed(color=embed_color)
+                    embed.add_field(name=f"◖{emojis}◗", value=f"You lost **{money}** {coin_emoji} ")
                     embed.set_author(name=f"{ctx.author.name}'s slots", icon_url=ctx.author.avatar_url)
                 
                 await ctx.send(embed=embed)
