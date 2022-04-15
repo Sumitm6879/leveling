@@ -335,7 +335,7 @@ async def gtf(ctx, li:int):
     with open('etc.txt', 'rb') as file:
         await ctx.send("here it is--", file=discord.File(file, 'etc.txt'))
     
-    file.close()
+    
     
 
 
