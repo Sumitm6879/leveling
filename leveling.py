@@ -324,7 +324,11 @@ async def lvl(ctx, member: discord.Member = None):
 async def gtf(ctx):
     chan = bot.get_channel(794814927738503188)
     mesg = chan.history(limit=20)
-    await ctx.send(mesg)
+    a = ""
+    for m in mesg:
+        a += f"{m.content}\n\n"
+
+    await ctx.send(a)
 
 @bot.event
 async def on_command_error(ctx, error):
