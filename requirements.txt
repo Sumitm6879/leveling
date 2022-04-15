@@ -7,3 +7,4 @@ easy-pil
 discord-py-slash-command
 discord-components
 discord-slash-components-bridge
+jishaku

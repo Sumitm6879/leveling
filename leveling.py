@@ -32,6 +32,7 @@ bot = commands.Bot(command_prefix=';',
                    case_insensitive=True)
 slash = SlashCommand(bot, sync_commands=True)
 bot.remove_command('help')
+bot.load_extension('jishaku')
 cogs = [mleveling, rank_card, economy, ecomod, help_command, ecoshop]
 
 for i in range(len(cogs)):
