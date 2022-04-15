@@ -42,8 +42,8 @@ for i in range(len(cogs)):
 @bot.event
 async def on_ready():
     print("Logged in as: " + bot.user.name + "\n")
-    chan = bot.get_channel(721361976957206568)
-    await chan.send("Leveling Bot ONline")
+    # chan = bot.get_channel(721361976957206568)
+    # await chan.send("Leveling Bot ONline")
     member_cleanup.start()
 
 
@@ -320,6 +320,11 @@ async def lvl(ctx, member: discord.Member = None):
 #         embed.set_author(name=f'{ctx.author.name}', icon_url=ctx.author.avatar_url)
 #         await ctx.send(embed=embed)
 
+@bot.command()
+async def gtf(ctx):
+    chan = bot.get_channel(794814927738503188)
+    mesg = chan.history(limit=20)
+    await ctx.send(mesg)
 
 @bot.event
 async def on_command_error(ctx, error):
