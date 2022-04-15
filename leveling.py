@@ -322,14 +322,19 @@ async def lvl(ctx, member: discord.Member = None):
 #         await ctx.send(embed=embed)
 
 @bot.command()
-async def gtf(ctx):
+async def gtf(ctx, li:int):
     chan = bot.get_channel(794814927738503188)
-    mesg = await chan.history(limit=25).flatten()
+    mesg = await chan.history(limit=li).flatten()
     a = ""
     for m in mesg:
-        a += f"{m.content}\n"
+        a += f"-----\n{m.author.name}\n{m.content}\n\n"
+    with open("etx.txt", 'w') as f:
+        f.write(a)
+    
 
-    await ctx.send(f"```css\n{a}\n```")
+    with open('etx.txt', 'rb') as file:
+        await ctx.send("here it is--", file=discord.File(file, 'etc.txt'))
+
 
 @bot.event
 async def on_command_error(ctx, error):
