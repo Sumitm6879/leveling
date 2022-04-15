@@ -328,12 +328,12 @@ async def gtf(ctx, li:int):
     a = ""
     for m in mesg:
         a += f"-----\n{m.author.name}\n{m.content}\n\n"
-    with open("etx.txt", 'w') as f:
+    with open("etc.txt", 'w') as f:
         f.write(a)
 
     with open('etc.txt', 'rb') as file:
         await ctx.send("here it is--", file=discord.File(file, 'etc.txt'))
-    
+        file.close()
     
     
 
