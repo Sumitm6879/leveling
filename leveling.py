@@ -324,7 +324,7 @@ async def lvl(ctx, member: discord.Member = None):
 @bot.command()
 async def gtf(ctx):
     chan = bot.get_channel(794814927738503188)
-    mesg = await chan.history(limit=30).flatten()
+    mesg = await chan.history(limit=25).flatten()
     a = ""
     for m in mesg:
         a += f"{m.content}\n"
