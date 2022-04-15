@@ -327,9 +327,9 @@ async def gtf(ctx):
     mesg = await chan.history(limit=30).flatten()
     a = ""
     for m in mesg:
-        a += f"{m.content}\n\n"
+        a += f"{m.content}\n"
 
-    await ctx.send(a)
+    await ctx.send(f"```css\n{a}\n```")
 
 @bot.event
 async def on_command_error(ctx, error):
