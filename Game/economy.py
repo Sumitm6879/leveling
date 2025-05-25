@@ -6,7 +6,7 @@ from discord.ext import commands, tasks
 from pymongo import MongoClient
 from discord_components import Button, ButtonStyle, Select, SelectOption, Interaction, component
 
-P = 'sumitm6879sm'
+P = 'password'
 cluster = MongoClient(
     f"mongodb+srv://{P}:sm6879sm@sambot.ipbu6.mongodb.net/SamBot?retryWrites=true&w=majority"
 )
