@@ -7,7 +7,7 @@ import random
 from discord.member import Member
 from pymongo import MongoClient, message
 
-cluster = MongoClient("mongodb+srv://sumitm6879sm:sm6879sm@sambot.ipbu6.mongodb.net/SamBot?retryWrites=true&w=majority")
+cluster = MongoClient("mongodb+srv://password:sm6879sm@sambot.ipbu6.mongodb.net/SamBot?retryWrites=true&w=majority")
 leveling = cluster['MysticBot']['levels']
 # level Roles
 level_role = ['Verified', 'Guest', 'Member', 'Super User', 'Addict', 'Veteran', 'Extreme user', 'Godly', 'Above all',
