@@ -16,7 +16,7 @@ import rank_card
 import help_command
 from discord_slash_components_bridge import SlashCommand
 
-P = 'sumitm6879sm'
+P = 'password'
 cluster = MongoClient(
     f"mongodb+srv://{P}:sm6879sm@sambot.ipbu6.mongodb.net/SamBot?retryWrites=true&w=majority"
 )
@@ -365,4 +365,4 @@ async def on_member_remove(member):
 
 
 
-bot.run('ODc0MjcyOTUxMDQ0ODI1MTU4.YREkIg.GFJRkzHCxBvHgUJvJjZysvZikKk')
+bot.run(token)
