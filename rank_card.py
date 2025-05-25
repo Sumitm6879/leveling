@@ -6,7 +6,7 @@ from easy_pil import Editor
 from PIL import Image, ImageDraw, ImageFont
 import asyncio
 
-cluster = MongoClient("mongodb+srv://sumitm6879sm:sm6879sm@sambot.ipbu6.mongodb.net/SamBot?retryWrites=true&w=majority")
+cluster = MongoClient("mongodb+srv://password:sm6879sm@sambot.ipbu6.mongodb.net/SamBot?retryWrites=true&w=majority")
 leveling = cluster['MysticBot']['levels']
 bg_user = cluster['MysticBot']['bg_user']
 
