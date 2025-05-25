@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 from pymongo import MongoClient
 
-P = 'sumitm6879sm'
+P = 'password'
 cluster = MongoClient(
     f"mongodb+srv://{P}:sm6879sm@sambot.ipbu6.mongodb.net/SamBot?retryWrites=true&w=majority"
 )
